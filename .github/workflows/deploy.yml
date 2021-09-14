@@ -35,5 +35,5 @@ jobs:
             docker pull localhost:5000/v2/librenotenot/librenote:latest
             docker stop librenotebot
             docker rm librenotebot
-            docker run --name librenotebot -d --env BOT_TOKEN=${{ secrets.BOT_TOKEN }} --restart unless-stopped localhost:5000/v2/librenotenot/librenote
+            docker run --name librenotebot -d ${{ secrets.envs }} --restart unless-stopped localhost:5000/v2/librenotenot/librenote
             docker restart librenotebot
