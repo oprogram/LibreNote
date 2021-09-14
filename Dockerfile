@@ -11,4 +11,4 @@ RUN npm install --production
 # Bundle app source
 COPY . .
 
-CMD [ "node", "src/index.js" ]
+CMD [ "node", "src/start.js" ]
