@@ -1,6 +1,8 @@
 name: build & deploy
 
-on: [release]
+on:
+  release:
+    types: [published]
 
 env:
   IMAGE_NAME: ${{ github.repository }}
