@@ -1,0 +1,5 @@
+# Changes to non-source directories need to be approved by the LibreNote security team
+* @LibreNoteBot/security-team
+
+# All source changes need to be approved by the LibreNote approval team
+/src/ @LibreNoteBot/approval-team
