@@ -7,9 +7,10 @@ const ytdl = ytdlExec.raw;
 const noop = () => { };
 
 module.exports = class Track {
-	constructor({ url, title, onStart, onFinish, onError }) {
+	constructor({ url, title, details, onStart, onFinish, onError }) {
 		this.url = url;
 		this.title = title;
+		this.details = details;
 		this.onStart = onStart;
 		this.onFinish = onFinish;
 		this.onError = onError;
@@ -67,6 +68,7 @@ module.exports = class Track {
 
 		return new Track({
 			title: info.videoDetails.title,
+			details: info.videoDetails,
 			url,
 			...wrappedMethods,
 		});

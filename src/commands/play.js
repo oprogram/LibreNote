@@ -1,3 +1,4 @@
+const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { joinVoiceChannel, entersState, VoiceConnectionStatus } = require('@discordjs/voice');
 const MusicConnection = require('../music/connection');
@@ -54,18 +55,41 @@ module.exports = {
 		try {
 			const track = await Track.from(interaction.options.get('url').value, {
 				onStart() {
-					interaction.followUp('Now playing!').catch(console.warn);
+					interaction.followUp({
+						embeds: [
+							new MessageEmbed()
+								.setDescription(`[${track.title}](${track.url})\n\n\`Requested by:\` ${interaction.user.tag}`)
+								.setAuthor('Now Playing', interaction.client.user.avatarURL())
+								.setThumbnail(track.details.thumbnails[3].url)
+								.addField('Channel', track.details.author.name, true)
+								.addField('Duration', new Date(Number(track.details.lengthSeconds) * 1000).toISOString().substr(11, 8), true),
+						],
+					}).catch(console.warn);
 				},
 				onFinish() {
-					interaction.followUp('Now finished!').catch(console.warn);
+					// interaction.followUp('Now finished!').catch(console.warn);
 				},
 				onError(error) {
 					console.warn(error);
 					interaction.followUp(`Error: ${error.message}`).catch(console.warn);
 				},
 			});
-			connection.addToQueue(track);
-			await interaction.editReply(`Queued **${track.title}**`);
+			if (Number(track.details.lengthSeconds) > (60 * 15)) {
+				return interaction.editReply('I cannot play songs longer than 15 minutes.');
+			}
+			else {
+				connection.addToQueue(track);
+			}
+			await interaction.editReply({
+				embeds: [
+					new MessageEmbed()
+						.setDescription(`[${track.title}](${track.url})`)
+						.setAuthor('Added to queue', interaction.user.avatarURL())
+						.setThumbnail(track.details.thumbnails[3].url)
+						.addField('Channel', track.details.author.name, true)
+						.addField('Duration', new Date(Number(track.details.lengthSeconds) * 1000).toISOString().substr(11, 8), true),
+				],
+			});
 		}
 		catch (error) {
 			console.warn(error);
