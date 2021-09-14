@@ -1,2 +1,2 @@
 require('dotenv').config();
-require('../src/create-commands')
+require('../src/create-commands');
