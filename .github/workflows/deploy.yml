@@ -4,9 +4,6 @@ on:
   release:
     types: [published]
 
-env:
-  IMAGE_NAME: ${{ github.repository }}
-
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -26,4 +23,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.REGISTRY }}${{ env.IMAGE_NAME }}:latest
+          tags: ${{ secrets.REGISTRY }}librenotenot/librenote:latest
