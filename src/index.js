@@ -12,6 +12,8 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
+client.connections = new Map();
+
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
 	client.user.setPresence({ activities: [{ name: 'music' }], status: 'online' });

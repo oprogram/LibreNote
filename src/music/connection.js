@@ -15,6 +15,7 @@ module.exports = class MusicConnection {
 		this.audioPlayer = createAudioPlayer();
 		this.queueLock = false;
 		this.readyLock = false;
+		this.currentTrack = undefined;
 		this.queue = [];
 
 		this.voiceConnection.on('stateChange', async (_, newState) => {
@@ -87,17 +88,20 @@ module.exports = class MusicConnection {
 		}
 
 		this.queueLock = true;
+		this.currentTrack = undefined;
 
 		const nextTrack = this.queue.shift();
 		if (nextTrack) {
 			try {
 				const resource = await nextTrack.createAudioResource();
 				this.audioPlayer.play(resource);
+				this.currentTrack = nextTrack;
 				this.queueLock = false;
 			}
 			catch (error) {
 				nextTrack.onError(error);
 				this.queueLock = false;
+				this.currentTrack = undefined;
 				return this.processQueue();
 			}
 		}

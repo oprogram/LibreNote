@@ -4,8 +4,6 @@ const { joinVoiceChannel, entersState, VoiceConnectionStatus } = require('@disco
 const MusicConnection = require('../music/connection');
 const Track = require('../music/track');
 
-const connections = new Map();
-
 module.exports = {
 	// data of the command
 	data: new SlashCommandBuilder()
@@ -25,7 +23,7 @@ module.exports = {
 		if (!member.voice.channelId) return interaction.editReply('You must be in a voice channel to run this command.');
 		if (!member.voice.channel.joinable) return interaction.editReply('I cannot join your voice channel.');
 
-		let connection = connections.get(interaction.guildId);
+		let connection = interaction.client.connections.get(interaction.guildId);
 
 		if (!connection) {
 			connection = new MusicConnection(
@@ -36,7 +34,7 @@ module.exports = {
 				}),
 			);
 			connection.voiceConnection.on('error', console.warn);
-			connections.set(interaction.guildId, connection);
+			interaction.client.connections.set(interaction.guildId, connection);
 		}
 
 		if (!connection) {
