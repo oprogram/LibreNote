@@ -1,2 +1,2 @@
 require('dotenv').config();
-require('../src/index')
+require('../src/index');
