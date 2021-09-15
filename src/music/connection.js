@@ -17,6 +17,7 @@ module.exports = class MusicConnection {
 		this.readyLock = false;
 		this.currentTrack = undefined;
 		this.queue = [];
+		this.loop = 'off';
 
 		this.voiceConnection.on('stateChange', async (_, newState) => {
 			if (newState.status === VoiceConnectionStatus.Disconnected) {
@@ -56,10 +57,20 @@ module.exports = class MusicConnection {
 			}
 		});
 
-		this.audioPlayer.on('stateChange', (oldState, newState) => {
+		this.audioPlayer.on('stateChange', async (oldState, newState) => {
 			if (newState.status === AudioPlayerStatus.Idle && oldState.status !== AudioPlayerStatus.Idle) {
-				oldState.resource.metadata.onFinish();
-				void this.processQueue();
+				if ((this.loop === 'track') && this.currentTrack) {
+					const resource = await this.currentTrack.createAudioResource();
+					this.audioPlayer.play(resource);
+				}
+				else {
+					oldState.resource.metadata.onFinish();
+					if (this.loop === 'queue' && this.currentTrack) {
+						this.addToQueue(this.currentTrack);
+					}
+					this.currentTrack = undefined;
+					void this.processQueue();
+				}
 			}
 			else if (newState.status === AudioPlayerStatus.Playing && oldState.status !== AudioPlayerStatus.Paused) {
 				newState.resource.metadata.onStart();
@@ -83,7 +94,7 @@ module.exports = class MusicConnection {
 	}
 
 	async processQueue() {
-		if (this.queueLock || this.audioPlayer.state.status !== AudioPlayerStatus.Idle || this.queue.length === 0) {
+		if (this.queueLock || this.audioPlayer.state.status !== AudioPlayerStatus.Idle || (this.queue.length === 0 && !(this.loop === 'track' && this.currentTrack))) {
 			return;
 		}
 

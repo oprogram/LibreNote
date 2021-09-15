@@ -40,4 +40,17 @@ client.on('interactionCreate', async interaction => {
 	}
 });
 
+client.on('voiceStateUpdate', async (oldState, newState) => {
+	// leave channel if no one else is in there and destroy the queue
+	const connection = client.connections.get(oldState.guild.id);
+	if (!!connection && (oldState.channelId != newState.channelId) && (oldState.member.id != client.id)) {
+		if (connection.voiceConnection.joinConfig.channelId == oldState.channelId) {
+			if (oldState.channel.members.size == 1) {
+				connection.voiceConnection.destroy();
+				client.connections.delete(oldState.guild.id);
+			}
+		}
+	}
+});
+
 client.login(process.env.BOT_TOKEN);

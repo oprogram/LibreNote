@@ -93,13 +93,14 @@ module.exports = {
 					}).catch(console.warn);
 				},
 				onFinish() {
-					// interaction.followUp('Now finished!').catch(console.warn);
+					//	a
 				},
 				onError(error) {
 					console.warn(error);
 					interaction.followUp(`Error: ${error.message}`).catch(console.warn);
 				},
 			});
+			track.requestedBy = interaction.user.tag;
 			if (Number(track.details.lengthSeconds) > (60 * 15)) {
 				return interaction.editReply('I cannot play songs longer than 15 minutes.');
 			}
