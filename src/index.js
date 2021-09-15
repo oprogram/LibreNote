@@ -3,6 +3,7 @@ const path = require('path');
 const { Client, Collection, Intents } = require('discord.js');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES] });
+const Redis = require('./utility/redis');
 
 client.commands = new Collection();
 const commandFiles = fs.readdirSync(path.join(__dirname, '/commands')).filter(file => file.endsWith('.js'));
@@ -13,6 +14,7 @@ for (const file of commandFiles) {
 }
 
 client.connections = new Map();
+client.db = new Redis();
 
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);

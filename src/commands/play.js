@@ -2,8 +2,8 @@ const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { joinVoiceChannel, entersState, VoiceConnectionStatus } = require('@discordjs/voice');
 const search = require('youtube-search');
-const MusicConnection = require('../music/connection');
-const Track = require('../music/track');
+const MusicConnection = require('../utility/musicConnection');
+const Track = require('../utility/track');
 
 const YouTubeURL = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/gi;
 
