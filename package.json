@@ -19,6 +19,7 @@
     "ansi-styles": "^4.3.0",
     "argparse": "^1.0.10",
     "astral-regex": "^2.0.0",
+    "axios": "^0.21.4",
     "balanced-match": "^1.0.2",
     "brace-expansion": "^1.1.11",
     "callsites": "^3.1.0",
