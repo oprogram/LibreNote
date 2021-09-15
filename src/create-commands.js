@@ -3,12 +3,26 @@ const path = require('path');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 
-const commands = [];
+const globalCommands = [];
+const guildCommands = {};
 const commandFiles = fs.readdirSync(path.join(__dirname, '/commands')).filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
 	const command = require(path.join(__dirname, '/commands', file));
-	commands.push(command.data.toJSON());
+	if (!command.guilds) globalCommands.push(command.data.toJSON());
+
+	if (Array.isArray(command.guilds)) {
+		command.guilds.forEach(guild => {
+			let existingArray = guildCommands[guild];
+
+			if (!existingArray) {
+				guildCommands[guild] = [];
+				existingArray = guildCommands[guild];
+			};
+
+			existingArray.push(command.data.toJSON());
+		});
+	}
 }
 
 const rest = new REST({ version: '9' }).setToken(process.env.BOT_TOKEN);
@@ -17,13 +31,29 @@ const rest = new REST({ version: '9' }).setToken(process.env.BOT_TOKEN);
 	try {
 		// TODO: Global commands/specific guild implementation
 		await rest.put(
-			Routes.applicationGuildCommands(process.env.CLIENT_ID, '880093118538584095'),
-			{ body: commands },
+			Routes.applicationCommands(process.env.CLIENT_ID),
+			{ body: globalCommands },
 		);
 
-		console.log('Successfully registered application commands.');
+		console.log('Successfully registered global commands.');
 	}
 	catch (error) {
 		console.error(error);
+	}
+
+	for (const guild in guildCommands) {
+		const commands = guildCommands[guild];
+
+		try {
+			await rest.put(
+				Routes.applicationGuildCommands(process.env.CLIENT_ID, guild),
+				{ body: commands },
+			);
+
+			console.log('Successfully registered commands for guild:', guild);
+		}
+		catch (error) {
+			console.error(error);
+		}
 	}
 })();
