@@ -1,15 +1,18 @@
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { joinVoiceChannel, entersState, VoiceConnectionStatus } = require('@discordjs/voice');
+const search = require('youtube-search');
 const MusicConnection = require('../music/connection');
 const Track = require('../music/track');
+
+const YouTubeURL = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/gi;
 
 module.exports = {
 	// data of the command
 	data: new SlashCommandBuilder()
 		.setName('play')
 		.setDescription('Plays a song!')
-		.addStringOption(option => option.setName('url').setDescription('The url of the song you would like to play').setRequired(true)),
+		.addStringOption(option => option.setName('song').setDescription('The you would like to play').setRequired(true)),
 	// array of guild ids, null for global command
 	guilds: ['880093118538584095'],
 	// method to run the command
@@ -41,6 +44,31 @@ module.exports = {
 			return interaction.editReply('An error occured while attempting to play music.');
 		}
 
+		const songRaw = interaction.options.get('song').value;
+		let URL;
+		const isURL = YouTubeURL.test(songRaw);
+
+		if (isURL) URL = songRaw;
+
+		if (!URL) {
+			// Search youtube for song
+			const searchResults = await search(
+				songRaw,
+				{
+					maxResults: 1,
+					type: 'video',
+					key: process.env.YT_API_KEY,
+				},
+			);
+
+			if (searchResults.results[0]) {
+				URL = searchResults.results[0].link;
+			}
+			else {
+				return interaction.editReply('No songs found with that query.');
+			}
+		}
+
 		try {
 			await entersState(connection.voiceConnection, VoiceConnectionStatus.Ready, 20e3);
 		}
@@ -51,7 +79,7 @@ module.exports = {
 		}
 
 		try {
-			const track = await Track.from(interaction.options.get('url').value, {
+			const track = await Track.from(URL, {
 				onStart() {
 					interaction.followUp({
 						embeds: [

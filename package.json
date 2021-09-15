@@ -111,6 +111,7 @@
     "wrappy": "^1.0.2",
     "yallist": "^4.0.0",
     "youtube-dl-exec": "^1.2.6",
+    "youtube-search": "^1.1.6",
     "ytdl-core": "^4.9.1"
   },
   "scripts": {
