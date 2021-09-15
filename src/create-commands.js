@@ -18,7 +18,7 @@ for (const file of commandFiles) {
 			if (!existingArray) {
 				guildCommands[guild] = [];
 				existingArray = guildCommands[guild];
-			};
+			}
 
 			existingArray.push(command.data.toJSON());
 		});
