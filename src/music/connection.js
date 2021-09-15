@@ -61,7 +61,7 @@ module.exports = class MusicConnection {
 				oldState.resource.metadata.onFinish();
 				void this.processQueue();
 			}
-			else if (newState.status === AudioPlayerStatus.Playing) {
+			else if (newState.status === AudioPlayerStatus.Playing && oldState.status !== AudioPlayerStatus.Paused) {
 				newState.resource.metadata.onStart();
 			}
 		});
