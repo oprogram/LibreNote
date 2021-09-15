@@ -1,11 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { AudioPlayerStatus } = require('@discordjs/voice');
+const { isDJ } = require('../utility/permissions');
 
 module.exports = {
 	// data of the command
 	data: new SlashCommandBuilder()
-		.setName('skip')
-		.setDescription('Skips the current playing song'),
+		.setName('forceskip')
+		.setDescription('Force skips the current playing song'),
 	// array of guild ids, null for global command
 	guilds: ['880093118538584095'],
 	// method to run the command
@@ -23,6 +24,9 @@ module.exports = {
 		if (!connection) {
 			return interaction.editReply('No music is currently playing.');
 		}
+
+		const isMemberDJ = await isDJ(member);
+		if (!isMemberDJ) return interaction.editReply('Only DJs can force skip tracks.');
 
 		const response =
 			connection.audioPlayer.state.status === AudioPlayerStatus.Idle
