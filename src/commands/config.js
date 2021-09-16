@@ -5,8 +5,16 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('config')
 		.setDescription('Configure the bot.')
-		.addSubcommand(subcommand => subcommand.setName('djrole').setDescription('Set the DJ role').addRoleOption(roleoption => roleoption.setName('role').setDescription('The DJ role').setRequired(true)))
-		.addSubcommand(subcommand => subcommand.setName('djonlymode').setDescription('Toggles DJ only mode on/off')),
+		.addSubcommand(subcommand => subcommand.setName('djrole')
+			.setDescription('Set the DJ role')
+			.addRoleOption(roleoption => roleoption.setName('role')
+				.setDescription('The DJ role')
+				.setRequired(true),
+			),
+		)
+		.addSubcommand(subcommand => subcommand.setName('djonlymode')
+			.setDescription('Toggles DJ only mode on/off'),
+		),
 	// array of guild ids, null for global command
 	guilds: null,
 	// method to run the command
@@ -25,7 +33,7 @@ module.exports = {
 		}
 		else if (subCommand === 'djonlymode') {
 			// toggle djonlymode
-			const djModeEnabled = !!(await interaction.client.db.getAsync(`librenote:settings:${interaction.guild.id}:djonlymode`));
+			const djModeEnabled = ((await interaction.client.db.getAsync(`librenote:settings:${interaction.guild.id}:djonlymode`)) == 'true');
 
 			await interaction.client.db.setAsync(`librenote:settings:${interaction.guild.id}:djonlymode`, !djModeEnabled);
 			return interaction.editReply(`Successfully **${djModeEnabled ? 'disabled' : 'enabled'}** DJ only mode.`);

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { canPerformAction } = require('../utility/permissions');
 
 const modes = ['off', 'queue', 'track'];
 const text = [':arrow_forward: **Loop mode set to off.**', ':repeat: **Loop mode set to __queue__.**', ':repeat_one: **Loop mode set to __track__.**'];
@@ -17,6 +18,9 @@ module.exports = {
 		if (!member) return interaction.reply({ content: 'You can only execute this command within a guild.', ephemeral: true });
 
 		await interaction.deferReply();
+
+		const canUseCommand = await canPerformAction(member);
+		if (!canUseCommand) return interaction.editReply('DJ only mode is enabled. You must be a DJ to run this command.');
 
 		if (!member.voice.channelId) return interaction.editReply('You must be in a voice channel to run this command.');
 

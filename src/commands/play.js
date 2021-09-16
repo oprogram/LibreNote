@@ -4,6 +4,7 @@ const { joinVoiceChannel, entersState, VoiceConnectionStatus } = require('@disco
 const search = require('youtube-search');
 const MusicConnection = require('../utility/musicConnection');
 const Track = require('../utility/track');
+const { canPerformAction } = require('../utility/permissions');
 
 const YouTubeURL = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/gi;
 
@@ -25,6 +26,9 @@ module.exports = {
 
 		if (!member.voice.channelId) return interaction.editReply('You must be in a voice channel to run this command.');
 		if (!member.voice.channel.joinable) return interaction.editReply('I cannot join your voice channel.');
+
+		const canUseCommand = await canPerformAction(member);
+		if (!canUseCommand) return interaction.editReply('DJ only mode is enabled. You must be a DJ to run this command.');
 
 		let connection = interaction.client.connections.get(interaction.guildId);
 
