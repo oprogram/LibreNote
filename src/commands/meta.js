@@ -9,7 +9,7 @@ module.exports = {
 		.setName('meta')
 		.setDescription('Github statistics'),
 
-	guilds: ['880093118538584095', '805531475487096943'],
+	guilds: null,
 
 	async run(interaction) {
 		await interaction.deferReply();

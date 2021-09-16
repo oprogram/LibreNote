@@ -14,7 +14,7 @@ module.exports = {
 		.setDescription('Plays a song!')
 		.addStringOption(option => option.setName('song').setDescription('The you would like to play').setRequired(true)),
 	// array of guild ids, null for global command
-	guilds: ['880093118538584095', '805531475487096943'],
+	guilds: null,
 	// method to run the command
 	async run(interaction) {
 		const member = interaction.member;

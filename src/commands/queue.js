@@ -7,7 +7,7 @@ module.exports = {
 		.setName('queue')
 		.setDescription('Displays the queue'),
 	// array of guild ids, null for global command
-	guilds: ['880093118538584095', '805531475487096943'],
+	guilds: null,
 	// method to run the command
 	async run(interaction) {
 		const member = interaction.member;
