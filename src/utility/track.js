@@ -14,6 +14,8 @@ module.exports = class Track {
 		this.onStart = onStart;
 		this.onFinish = onFinish;
 		this.onError = onError;
+
+		this.voteSkip = [];
 	}
 
 	createAudioResource() {
