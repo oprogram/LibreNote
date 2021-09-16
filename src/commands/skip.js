@@ -42,5 +42,5 @@ module.exports = {
 				: ':fast_forward: **Skipped!**';
 		connection.audioPlayer.stop();
 		await interaction.editReply(response);
-	}
-}
+	},
+};
