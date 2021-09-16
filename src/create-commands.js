@@ -29,7 +29,6 @@ const rest = new REST({ version: '9' }).setToken(process.env.BOT_TOKEN);
 
 (async () => {
 	try {
-		// TODO: Global commands/specific guild implementation
 		await rest.put(
 			Routes.applicationCommands(process.env.CLIENT_ID),
 			{ body: globalCommands },
