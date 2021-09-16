@@ -20,7 +20,7 @@ module.exports = {
 		const connection = interaction.client.connections.get(interaction.guildId);
 
 		if (!connection) return interaction.editReply('No music is currently playing.');
-	
+
 		if (member.voice.channel.members.size > 2) {
 			const skipReq = Math.ceil(member.voice.channel.members.size / 2);
 
