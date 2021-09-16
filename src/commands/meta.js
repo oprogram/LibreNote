@@ -9,7 +9,7 @@ module.exports = {
 		.setName('meta')
 		.setDescription('Github statistics'),
 
-	guilds: ['880093118538584095'],
+	guilds: ['880093118538584095', '805531475487096943'],
 
 	async run(interaction) {
 		await interaction.deferReply();
@@ -31,7 +31,7 @@ module.exports = {
 			});
 
 		const embed = new MessageEmbed().setAuthor('Meta');
-		const topContrib = [ '`Top 5 Contributors`' ];
+		const topContrib = ['`Top 5 Contributors`'];
 		for (let i = 0; i < contribList.length; ++i) {
 			if (i == 5) break;
 
