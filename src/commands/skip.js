@@ -40,6 +40,7 @@ module.exports = {
 			connection.audioPlayer.state.status === AudioPlayerStatus.Idle
 				? 'No music is currently playing.'
 				: ':fast_forward: **Skipped!**';
+		connection.currentTrack.voteSkip = [];
 		connection.audioPlayer.stop();
 		await interaction.editReply(response);
 	},
