@@ -35,5 +35,4 @@ jobs:
             docker pull localhost:5000/v2/librenotenot/librenote:latest
             docker stop librenotebot
             docker rm librenotebot
-            docker run --name librenotebot -d ${{ secrets.envs }} --restart unless-stopped localhost:5000/v2/librenotenot/librenote
-            docker restart librenotebot
+            docker run --name librenotebot -d ${{ secrets.envs }} --network="host" --restart unless-stopped localhost:5000/v2/librenotenot/librenote
