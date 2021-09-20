@@ -14,6 +14,13 @@ module.exports = {
 		)
 		.addSubcommand(subcommand => subcommand.setName('djonlymode')
 			.setDescription('Toggles DJ only mode on/off'),
+		)
+		.addSubcommand(subcommand => subcommand.setName('maxlength')
+			.setDescription('Set the song length limit')
+			.addIntegerOption(lengthoption => lengthoption.setName('length')
+				.setDescription('The length (in minutes)')
+				.setRequired(true),
+			),
 		),
 	// array of guild ids, null for global command
 	guilds: null,
@@ -37,6 +44,12 @@ module.exports = {
 
 			await interaction.client.db.setAsync(`librenote:settings:${interaction.guild.id}:djonlymode`, !djModeEnabled);
 			return interaction.editReply(`Successfully **${djModeEnabled ? 'disabled' : 'enabled'}** DJ only mode.`);
+		}
+		else if (subCommand === 'maxlength') {
+			const length = interaction.options.getInteger('length');
+
+			await interaction.client.db.setAsync(`librenote:settings:${interaction.guild.id}:maxlength`, length);
+			return interaction.editReply(`Successfully set the song length limit to **${length} ${length == 1 ? 'minute' : 'minutes'}**`);
 		}
 	},
 };
