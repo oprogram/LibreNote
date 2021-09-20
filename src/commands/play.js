@@ -106,13 +106,11 @@ module.exports = {
 			});
 			track.requestedBy = interaction.user.tag;
 
-			let maxlength = 15;
-			if (await interaction.client.db.getAsync(`librenote:settings:${interaction.guild.id}:maxlength`)) {
-				maxlength = parseInt(await interaction.client.db.getAsync(`librenote:settings:${interaction.guild.id}:maxlength`));
-			}
+			const maxlength = parseInt(await interaction.client.db.getAsync(`librenote:settings:${interaction.guild.id}:maxlength`));
+			console.log(maxlength);
 
-			if (Number(track.details.lengthSeconds) > (60 * parseInt(maxlength))) {
-				return interaction.editReply(`I cannot play songs longer than ${maxlength} ${maxlength == 1 ? 'minute' : 'minutes'} minutes.`);
+			if (Number(track.details.lengthSeconds) > 60 * (isNaN(maxlength) ? 15 : maxlength)) {
+				return interaction.editReply(`I cannot play songs longer than ${isNaN(maxlength) ? 15 : maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}`);
 			}
 			else {
 				connection.addToQueue(track);
