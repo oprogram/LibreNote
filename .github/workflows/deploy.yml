@@ -11,37 +11,6 @@ env:
 jobs:
   docker:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-        with:
-          registry: ${{ secrets.REGISTRY }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.REGISTRY }}librenotenot/librenote:latest
-
-      - name: Deploy on VPS
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.HOST_USERNAME }}
-          password: ${{ secrets.HOST_PASSWORD }}
-          script: |
-            docker pull localhost:5000/v2/librenotenot/librenote:latest
-            docker stop librenotebot
-            docker rm librenotebot
-            docker run --name librenotebot -d ${{ secrets.envs }} --network="host" --restart unless-stopped localhost:5000/v2/librenotenot/librenote
-  githubcontainers:
-    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -70,3 +39,14 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      - name: Deploy on VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.HOST_USERNAME }}
+          password: ${{ secrets.HOST_PASSWORD }}
+          script: |
+            docker pull ghcr.io/librenotebot/librenote:latest
+            docker stop librenotebot
+            docker rm librenotebot
+            docker run --name librenotebot -d ${{ secrets.envs }} --network=host --restart=unless-stopped ghcr.io/librenotebot/librenote:latest
