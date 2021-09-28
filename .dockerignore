@@ -1,2 +1,8 @@
 node_modules
 npm-debug.log
+.env
+.env.example
+.eslintrc.json
+dev
+.github
+LICENSE
