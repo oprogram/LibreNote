@@ -105,8 +105,11 @@ module.exports = {
 				},
 			});
 			track.requestedBy = interaction.user.tag;
-			if (Number(track.details.lengthSeconds) > (60 * 15)) {
-				return interaction.editReply('I cannot play songs longer than 15 minutes.');
+
+			const maxlength = parseInt(await interaction.client.db.getAsync(`librenote:settings:${interaction.guild.id}:maxlength`));
+
+			if (Number(track.details.lengthSeconds) > 60 * (isNaN(maxlength) ? 15 : maxlength)) {
+				return interaction.editReply(`I cannot play songs longer than ${isNaN(maxlength) ? 15 : maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}`);
 			}
 			else {
 				connection.addToQueue(track);
