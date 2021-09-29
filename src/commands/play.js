@@ -5,8 +5,10 @@ const search = require('youtube-search');
 const MusicConnection = require('../utility/musicConnection');
 const Track = require('../utility/track');
 const { canPerformAction } = require('../utility/permissions');
+const { default: axios } = require('axios');
 
 const YouTubeURL = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/gi;
+const YouTubePlaylistURL = /^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/g;
 
 module.exports = {
 	// data of the command
@@ -48,11 +50,83 @@ module.exports = {
 			return interaction.editReply('An error occured while attempting to play music.');
 		}
 
+		const maxlength = parseInt(await interaction.client.db.getAsync(`librenote:settings:${interaction.guild.id}:maxlength`));
+
 		const songRaw = interaction.options.get('song').value;
 		let URL;
 		const isURL = YouTubeURL.test(songRaw);
+		const isPlaylist = YouTubePlaylistURL.test(songRaw);
 
-		if (isURL) URL = songRaw;
+		if (isURL) { URL = songRaw; }
+		else if (isPlaylist) {
+			let playlistId;
+			const match = new RegExp('[&?]list=([a-z0-9_-]+)', 'i').exec(songRaw);
+			if (match && match[1].length > 0) {
+				playlistId = match[1];
+			}
+			else {
+				return interaction.editReply('Invalid playlist URL');
+			}
+
+			await interaction.editReply('Fetching playlist items');
+
+			let playlistItems;
+			await axios.get(`https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${process.env.YT_API_KEY}`)
+				.then(async response => {
+					const itemLimit = parseInt(await interaction.client.db.getAsync(`librenote:settings:${interaction.guild.id}:playlistmax`));
+					if (response.data.items.length > (isNaN(itemLimit) ? 50 : itemLimit)) {
+						return interaction.editReply(`I can not use playlists with more than ${isNaN(itemLimit) ? 50 : itemLimit} ${itemLimit == 1 ? 'song' : 'songs'}`);
+					}
+					playlistItems = response.data.items;
+				}).catch(error => {
+					console.warn(error);
+				});
+
+			const success = [];
+			const fail = [];
+
+			for (const item of playlistItems) {
+				const url = 'https://www.youtube.com/watch?v=' + item.snippet.resourceId.videoId;
+				try {
+					const track = await Track.from(url, {
+						onStart() {
+							interaction.followUp({
+								embeds: [
+									new MessageEmbed()
+										.setDescription(`[${track.title}](${track.url})\n\n\`Requested by:\` ${interaction.user.tag}`)
+										.setAuthor('Now Playing', interaction.client.user.avatarURL())
+										.setThumbnail(track.details.thumbnails[3].url)
+										.addField('Channel', track.details.author.name, true)
+										.addField('Duration', new Date(Number(track.details.lengthSeconds) * 1000).toISOString().substr(11, 8), true),
+								],
+							}).catch(console.warn);
+						},
+						onFinish() {
+							//	a
+						},
+						onError(error) {
+							console.warn(error);
+							interaction.followUp(`Error: ${error.message}`).catch(console.warn);
+						},
+					});
+					track.requestedBy = interaction.user.tag;
+
+					if (Number(track.details.lengthSeconds) > 60 * (isNaN(maxlength) ? 15 : maxlength)) {
+						return interaction.followUp(`[**${track.title}**](${url}) is longer than the permitted ${isNaN(maxlength) ? 15 : maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}`);
+					}
+					else {
+						connection.addToQueue(track);
+					}
+					success.push(url);
+				}
+				catch (error) {
+					console.warn(error);
+					fail.push(url);
+				}
+			}
+
+			return interaction.editReply(`Successfully added ${success.length} tracks to the queue, ${fail.length} tracks failed`);
+		}
 
 		if (!URL) {
 			// Search youtube for song
@@ -105,8 +179,6 @@ module.exports = {
 				},
 			});
 			track.requestedBy = interaction.user.tag;
-
-			const maxlength = parseInt(await interaction.client.db.getAsync(`librenote:settings:${interaction.guild.id}:maxlength`));
 
 			if (Number(track.details.lengthSeconds) > 60 * (isNaN(maxlength) ? 15 : maxlength)) {
 				return interaction.editReply(`I cannot play songs longer than ${isNaN(maxlength) ? 15 : maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}`);

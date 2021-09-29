@@ -21,6 +21,13 @@ module.exports = {
 				.setDescription('The length (in minutes)')
 				.setRequired(true),
 			),
+		)
+		.addSubcommand(subcommand => subcommand.setName('playlistmax')
+			.setDescription('Set the playlist item limit')
+			.addIntegerOption(integeroption => integeroption.setName('limit')
+				.setDescription('The limit')
+				.setRequired(true),
+			),
 		),
 	// array of guild ids, null for global command
 	guilds: null,
@@ -52,6 +59,15 @@ module.exports = {
 
 			await interaction.client.db.setAsync(`librenote:settings:${interaction.guild.id}:maxlength`, length);
 			return interaction.editReply(`Successfully set the song length limit to **${length} ${length == 1 ? 'minute' : 'minutes'}**`);
+		}
+		else if (subCommand === 'playlistmax') {
+			const limit = interaction.options.getInteger('limit');
+			if (limit > 50) {
+				return interaction.editReply('The YouTube API does not support more than 50 items in a playlist');
+			}
+
+			await interaction.client.db.setAsync(`librenote:settings:${interaction.guild.id}:playlistmax`, limit);
+			return interaction.editReply(`Successsfully set the playlist item limit to **${limit} ${limit == 1 ? 'item' : 'items'}**`);
 		}
 	},
 };
