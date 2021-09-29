@@ -5,34 +5,39 @@ id: track.js
 ## Classes
 
 <dl>
-<dt><a href="#Track
- Creates a Track class from its details">Track
- Creates a Track class from its details</a></dt>
+<dt><a href="#Track">Track</a></dt>
 <dd></dd>
 </dl>
 
 ## Functions
 
 <dl>
-<dt><a href="#Creates an audio resource via ytdl">Creates an audio resource via ytdl()</a></dt>
-<dd></dd>
-<dt><a href="#Creates and returns a Track class from a YouTube URL and provided callbacks">Creates and returns a Track class from a YouTube URL and provided callbacks(url, methods)</a></dt>
-<dd></dd>
+<dt><a href="#createAudioResource">createAudioResource()</a></dt>
+<dd><p>Creates an audio resource via ytdl</p></dd>
+<dt><a href="#from">from(url, methods)</a></dt>
+<dd><p>Creates and returns a Track class from a YouTube URL and provided callbacks</p></dd>
 </dl>
 
-<a name="Track
- Creates a Track class from its details"></a>
+<a name="Track"></a>
 
 ## Track
- Creates a Track class from its details
 **Kind**: global class  
-<a name="Creates an audio resource via ytdl"></a>
+<a name="new_Track_new"></a>
 
-## Creates an audio resource via ytdl()
+### new Track()
+<p>Creates a Track class from it's details</p>
+
+<a name="createAudioResource"></a>
+
+## createAudioResource()
+<p>Creates an audio resource via ytdl</p>
+
 **Kind**: global function  
-<a name="Creates and returns a Track class from a YouTube URL and provided callbacks"></a>
+<a name="from"></a>
 
-## Creates and returns a Track class from a YouTube URL and provided callbacks(url, methods)
+## from(url, methods)
+<p>Creates and returns a Track class from a YouTube URL and provided callbacks</p>
+
 **Kind**: global function  
 
 | Param | Type | Description |

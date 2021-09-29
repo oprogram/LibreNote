@@ -2,36 +2,27 @@
 id: musicConnection.js
 ---
 
-## Classes
+<a name="module_musicConnection"></a>
 
-<dl>
-<dt><a href="#MusicConnection
- Creates and returns a MusicConnection class">MusicConnection
- Creates and returns a MusicConnection class</a></dt>
-<dd></dd>
-</dl>
+## musicConnection
+**Example**  
+```js
+new MusicConnection(
+		joinVoiceChannel(...),
+	);
+```
 
-## Functions
+* [musicConnection](#module_musicConnection)
+    * [~MusicConnection](#module_musicConnection..MusicConnection)
+        * [new MusicConnection(voiceConnection)](#new_module_musicConnection..MusicConnection_new)
+    * [~addToQueue(track)](#module_musicConnection..addToQueue)
+    * [~stop()](#module_musicConnection..stop)
+    * [~processQueue()](#module_musicConnection..processQueue)
 
-<dl>
-<dt><a href="#addToQueue">addToQueue(track)</a></dt>
-<dd><p>Adds a Track class to the queue</p></dd>
-<dt><a href="#stop
- Stops the player and clears the queue.">stop
- Stops the player and clears the queue.()</a></dt>
-<dd></dd>
-<dt><a href="#processQueue
- Processes the queue, plays the next track if there is one.">processQueue
- Processes the queue, plays the next track if there is one.()</a></dt>
-<dd></dd>
-</dl>
+<a name="module_musicConnection..MusicConnection"></a>
 
-<a name="MusicConnection
- Creates and returns a MusicConnection class"></a>
-
-## MusicConnection
- Creates and returns a MusicConnection class
-**Kind**: global class  
+### musicConnection~MusicConnection
+**Kind**: inner class of [<code>musicConnection</code>](#module_musicConnection)  
 **Properties**
 
 | Name | Type | Description |
@@ -45,36 +36,36 @@ id: musicConnection.js
 | loop | <code>string</code> | <p>Loop mode</p> |
 | shuffle | <code>boolean</code> | <p>Shuffle mode</p> |
 
-<a name="new_MusicConnection
- Creates and returns a MusicConnection class_new"></a>
+<a name="new_module_musicConnection..MusicConnection_new"></a>
 
-### new MusicConnection
- Creates and returns a MusicConnection class(voiceConnection)
+#### new MusicConnection(voiceConnection)
+<p>Creates and returns a MusicConnection class</p>
+
 
 | Param | Type | Description |
 | --- | --- | --- |
 | voiceConnection | <code>object</code> | <p>discord.js voice connection</p> |
 
-<a name="addToQueue"></a>
+<a name="module_musicConnection..addToQueue"></a>
 
-## addToQueue(track)
+### musicConnection~addToQueue(track)
 <p>Adds a Track class to the queue</p>
 
-**Kind**: global function  
+**Kind**: inner method of [<code>musicConnection</code>](#module_musicConnection)  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | track | <code>object</code> | <p>Track Class</p> |
 
-<a name="stop
- Stops the player and clears the queue."></a>
+<a name="module_musicConnection..stop"></a>
 
-## stop
- Stops the player and clears the queue.()
-**Kind**: global function  
-<a name="processQueue
- Processes the queue, plays the next track if there is one."></a>
+### musicConnection~stop()
+<p>Stops the player and clears the queue.</p>
 
-## processQueue
- Processes the queue, plays the next track if there is one.()
-**Kind**: global function  
+**Kind**: inner method of [<code>musicConnection</code>](#module_musicConnection)  
+<a name="module_musicConnection..processQueue"></a>
+
+### musicConnection~processQueue()
+<p>Processes the queue, plays the next track if there is one.</p>
+
+**Kind**: inner method of [<code>musicConnection</code>](#module_musicConnection)  

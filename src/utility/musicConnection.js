@@ -10,8 +10,17 @@ const { promisify } = require('util');
 const wait = promisify(setTimeout);
 
 /**
- * Class to hold a music connection
+ * @module musicConnection
+ * @example
+ * new MusicConnection(
+		joinVoiceChannel(...),
+	);
  */
+
+/**
+ * @alias module:musicconnection
+ * @typicalname MusicConnection
+*/
 module.exports = class MusicConnection {
 	/**
 	 * @constructor MusicConnection

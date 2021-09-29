@@ -5,44 +5,37 @@ id: redis.js
 ## Classes
 
 <dl>
-<dt><a href="#Redis
-Creates a Redis class">Redis
-Creates a Redis class</a></dt>
+<dt><a href="#Redis">Redis</a></dt>
 <dd></dd>
 </dl>
 
 ## Functions
 
 <dl>
-<dt><a href="#getAsync
-Gets a string from the redis cache by key">getAsync
-Gets a string from the redis cache by key(key)</a> ⇒ <code>string</code></dt>
-<dd></dd>
-<dt><a href="#setAsync
-Sets a value with the provided key">setAsync
-Sets a value with the provided key(key, value)</a> ⇒ <code>void</code></dt>
-<dd></dd>
-<dt><a href="#delAsync
-Deletes the entry with the specific key">delAsync
-Deletes the entry with the specific key(key)</a> ⇒ <code>void</code></dt>
-<dd></dd>
-<dt><a href="#expireAsync
-Sets a keys expiration">expireAsync
-Sets a keys expiration(key, time)</a> ⇒ <code>void</code></dt>
-<dd></dd>
+<dt><a href="#getAsync">getAsync(key)</a> ⇒ <code>string</code></dt>
+<dd><p>Gets a string from the redis cache by key</p></dd>
+<dt><a href="#setAsync">setAsync(key, value)</a> ⇒ <code>void</code></dt>
+<dd><p>Sets a value with the provided key</p></dd>
+<dt><a href="#delAsync">delAsync(key)</a> ⇒ <code>void</code></dt>
+<dd><p>Deletes the entry with the specific key</p></dd>
+<dt><a href="#expireAsync">expireAsync(key, time)</a> ⇒ <code>void</code></dt>
+<dd><p>Set's a key's expiration</p></dd>
 </dl>
 
-<a name="Redis
-Creates a Redis class"></a>
+<a name="Redis"></a>
 
 ## Redis
-Creates a Redis class
 **Kind**: global class  
-<a name="getAsync
-Gets a string from the redis cache by key"></a>
+<a name="new_Redis_new"></a>
 
-## getAsync
-Gets a string from the redis cache by key(key) ⇒ <code>string</code>
+### new Redis()
+<p>Creates a Redis class</p>
+
+<a name="getAsync"></a>
+
+## getAsync(key) ⇒ <code>string</code>
+<p>Gets a string from the redis cache by key</p>
+
 **Kind**: global function  
 **Returns**: <code>string</code> - <p>The value</p>  
 
@@ -50,11 +43,11 @@ Gets a string from the redis cache by key(key) ⇒ <code>string</code>
 | --- | --- | --- |
 | key | <code>string</code> | <p>The key</p> |
 
-<a name="setAsync
-Sets a value with the provided key"></a>
+<a name="setAsync"></a>
 
-## setAsync
-Sets a value with the provided key(key, value) ⇒ <code>void</code>
+## setAsync(key, value) ⇒ <code>void</code>
+<p>Sets a value with the provided key</p>
+
 **Kind**: global function  
 
 | Param | Type | Description |
@@ -62,22 +55,22 @@ Sets a value with the provided key(key, value) ⇒ <code>void</code>
 | key | <code>string</code> | <p>The key</p> |
 | value | <code>string</code> | <p>The value</p> |
 
-<a name="delAsync
-Deletes the entry with the specific key"></a>
+<a name="delAsync"></a>
 
-## delAsync
-Deletes the entry with the specific key(key) ⇒ <code>void</code>
+## delAsync(key) ⇒ <code>void</code>
+<p>Deletes the entry with the specific key</p>
+
 **Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | key | <code>string</code> | <p>The key</p> |
 
-<a name="expireAsync
-Sets a keys expiration"></a>
+<a name="expireAsync"></a>
 
-## expireAsync
-Sets a keys expiration(key, time) ⇒ <code>void</code>
+## expireAsync(key, time) ⇒ <code>void</code>
+<p>Set's a key's expiration</p>
+
 **Kind**: global function  
 
 | Param | Type | Description |
