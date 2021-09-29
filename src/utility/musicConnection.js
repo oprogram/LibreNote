@@ -11,11 +11,10 @@ const wait = promisify(setTimeout);
 
 /**
  * @module musicConnection
- * @typicalname MusicConnection
  * @example
  * new MusicConnection(
-		joinVoiceChannel(...),
-	);
+	joinVoiceChannel(...),
+);
  */
 module.exports = class MusicConnection {
 	/**
