@@ -1,7 +1,9 @@
 {
   "devDependencies": {
     "dotenv": "^10.0.0",
-    "eslint": "^7.32.0"
+    "eslint": "^7.32.0",
+    "jsdoc-to-markdown": "^7.0.1",
+    "mermaid": "^8.13.0"
   },
   "name": "librenotebot",
   "version": "1.0.0",
@@ -118,7 +120,8 @@
     "ytdl-core": "^4.9.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "cd docs && npm i && mkdir docs && cd ..",
+    "docs": "node dev/generate-docs.js && cd docs && npm run build && npm run serve"
   },
   "repository": {
     "type": "git",
