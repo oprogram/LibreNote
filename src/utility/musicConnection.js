@@ -106,7 +106,7 @@ module.exports = class MusicConnection {
 
 		if (this.shuffle) {
 			if (this.queue.length > 0) {
-				const index = Math.floor(Math.random()*this.queue.length);
+				const index = Math.floor(Math.random() * this.queue.length);
 				console.log(index);
 				nextTrack = this.queue[index];
 				this.queue.splice(index, 1);
