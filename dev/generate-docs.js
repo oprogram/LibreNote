@@ -25,7 +25,12 @@ function generateDocs() {
 
   // Delete everything in docs/code folder
   const docsFolder = path.join(__dirname, '../docs/docs/code');
-  fs.rmdirSync(docsFolder, { recursive: true });
+  try {
+    fs.rmdirSync(docsFolder, { recursive: true });
+  }
+  catch (err) {
+    console.warn(err);
+  }
   fs.mkdirSync(docsFolder);
 
   // Pass README.md to docs directory
@@ -43,13 +48,13 @@ function generateDocs() {
     // if there's markdown, do stuff
     if (markdown && markdown.length > 0) {
       const fileName = /[^/]*$/.exec(filePath)[0];
-      const directory = /[^/]*$/.exec(filePath.slice(0, -(4+fileName.length)))[0];
+      const directory = /[^/]*$/.exec(filePath.slice(0, -(1+fileName.length)))[0];
 
       console.log(directory, fileName);
 
       const writeDir = path.join(
         __dirname,
-        `../docs/docs/${directory}`,
+        `../docs/docs/code/${directory}`,
       )
 
       if (!fs.existsSync(writeDir)) {

@@ -16,20 +16,48 @@ client.on('connect', function() {
 	console.log('Redis connected!');
 });
 
-/**
- *  Creates a Redis class with the ability to interact with Redis
- * @constructor
- */
+/** Class to interact with redis */
 module.exports = class Redis {
+
+	/**
+	 * @constructor Redis
+	 * @description Creates a Redis class
+	 */
 	constructor() {
+		/**
+		 * @method getAsync
+		 * @description Gets a string from the redis cache by key
+		 * @param {string} key The key
+		 * @returns {string} The value
+		 */
 		this.getAsync = promisify(client.get).bind(client);
+		/**
+		 * @method setAsync
+		 * @description Sets a value with the provided key
+		 * @param {string} key The key
+		 * @param {string} value The value
+		 * @returns {void}
+		 */
 		this.setAsync = promisify(client.set).bind(client);
 
+		/**
+		 * @method delAsync
+		 * @description Deletes the entry with the specific key
+		 * @param {string} key The key
+		 * @returns {void}
+		 */
 		this.delAsync = promisify(client.del).bind(client);
 
 		this.hgetallAsync = promisify(client.hgetall).bind(client);
 		this.hmsetAsync = promisify(client.hmset).bind(client);
 
+		/**
+		 * @method expireAsync
+		 * @description Set's a key's expiration
+		 * @param {string} key The key
+		 * @param {number} time Time until the key should expire, in seconds
+		 * @returns {void}
+		 */
 		this.expireAsync = promisify(client.expire).bind(client);
 
 		this.scanAsync = promisify(client.scan).bind(client);

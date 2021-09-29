@@ -9,11 +9,26 @@ const {
 const { promisify } = require('util');
 const wait = promisify(setTimeout);
 
+/**
+ * @module musicConnection
+ * @example
+ * new MusicConnection(
+	joinVoiceChannel(...),
+);
+ */
 module.exports = class MusicConnection {
 	/**
-	 *  Creates and returns a MusicConnection class
-	 * @constructor
+	 * @constructor MusicConnection
+	 * @description Creates and returns a MusicConnection class
 	 * @param {object} voiceConnection discord.js voice connection
+	 * @property {object} voiceConnection - The @discordjs/voice VoiceConnection
+	 * @property {object} audioPlayer - The @discordjs/voice audio player
+	 * @property {boolean} queueLock - Queue Lock
+	 * @property {boolean} readyLock - Ready Lock
+	 * @property {Object} currentTrack - Currently playing track
+	 * @property {Array} queue - Array of tracks queued
+	 * @property {string} loop - Loop mode
+	 * @property {boolean} shuffle - Shuffle mode
 	 */
 	constructor(voiceConnection) {
 		this.voiceConnection = voiceConnection;
@@ -89,7 +104,8 @@ module.exports = class MusicConnection {
 	}
 
 	/**
-	 *  Adds a Track class to the queue
+	 * @method addToQueue
+	 * @description Adds a Track class to the queue
 	 * @param {object} track Track Class
 	 */
 	async addToQueue(track) {
@@ -98,7 +114,8 @@ module.exports = class MusicConnection {
 	}
 
 	/**
-	 *  Stops the player and clears the queue.
+	 * @method stop
+	 * @description Stops the player and clears the queue.
 	 */
 	stop() {
 		this.queueLock = true;
@@ -107,7 +124,8 @@ module.exports = class MusicConnection {
 	}
 
 	/**
-	 *  Processes the queue, plays the next track if there is one.
+	 * @method processQueue
+	 * @description Processes the queue, plays the next track if there is one.
 	 */
 	async processQueue() {
 		if (this.queueLock || this.audioPlayer.state.status !== AudioPlayerStatus.Idle || (this.queue.length === 0 && !(this.loop === 'track' && this.currentTrack))) {
