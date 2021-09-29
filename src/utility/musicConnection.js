@@ -10,6 +10,11 @@ const { promisify } = require('util');
 const wait = promisify(setTimeout);
 
 module.exports = class MusicConnection {
+	/**
+	 *  Creates and returns a MusicConnection class
+	 * @constructor
+	 * @param {object} voiceConnection discord.js voice connection
+	 */
 	constructor(voiceConnection) {
 		this.voiceConnection = voiceConnection;
 		this.audioPlayer = createAudioPlayer();
@@ -83,17 +88,27 @@ module.exports = class MusicConnection {
 		voiceConnection.subscribe(this.audioPlayer);
 	}
 
+	/**
+	 *  Adds a Track class to the queue
+	 * @param {object} track Track Class
+	 */
 	async addToQueue(track) {
 		this.queue.push(track);
 		await this.processQueue();
 	}
 
+	/**
+	 *  Stops the player and clears the queue.
+	 */
 	stop() {
 		this.queueLock = true;
 		this.queue = [];
 		this.audioPlayer.stop(true);
 	}
 
+	/**
+	 *  Processes the queue, plays the next track if there is one.
+	 */
 	async processQueue() {
 		if (this.queueLock || this.audioPlayer.state.status !== AudioPlayerStatus.Idle || (this.queue.length === 0 && !(this.loop === 'track' && this.currentTrack))) {
 			return;

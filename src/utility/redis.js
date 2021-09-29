@@ -16,6 +16,10 @@ client.on('connect', function() {
 	console.log('Redis connected!');
 });
 
+/**
+ *  Creates a Redis class with the ability to interact with Redis
+ * @constructor
+ */
 module.exports = class Redis {
 	constructor() {
 		this.getAsync = promisify(client.get).bind(client);
