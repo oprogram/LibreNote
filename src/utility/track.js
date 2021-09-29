@@ -7,6 +7,10 @@ const ytdl = ytdlExec.raw;
 const noop = () => { };
 
 module.exports = class Track {
+	/**
+	 *  Creates a Track class from it's details
+	 * @constructor
+	 */
 	constructor({ url, title, details, onStart, onFinish, onError }) {
 		this.url = url;
 		this.title = title;
@@ -18,6 +22,9 @@ module.exports = class Track {
 		this.voteSkip = [];
 	}
 
+	/**
+	 *  Creates an audio resource via ytdl
+	 */
 	createAudioResource() {
 		return new Promise((resolve, reject) => {
 			const process = ytdl(
@@ -51,6 +58,11 @@ module.exports = class Track {
 		});
 	}
 
+	/**
+	 *  Creates and returns a Track class from a YouTube URL and provided callbacks
+	 * @param {string} url YouTube video URL
+	 * @param {object} methods Callback methods
+	 */
 	static async from(url, methods) {
 		const info = await getInfo(url);
 
