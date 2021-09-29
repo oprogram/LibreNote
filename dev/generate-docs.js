@@ -25,7 +25,12 @@ function generateDocs() {
 
   // Delete everything in docs/code folder
   const docsFolder = path.join(__dirname, '../docs/docs/code');
-  fs.rmdirSync(docsFolder, { recursive: true });
+  try {
+    fs.rmdirSync(docsFolder, { recursive: true });
+  }
+  catch (err) {
+    console.warn(err);
+  }
   fs.mkdirSync(docsFolder);
 
   // Pass README.md to docs directory
