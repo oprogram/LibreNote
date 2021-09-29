@@ -33,7 +33,7 @@ module.exports = {
 		await interaction.editReply({
 			embeds: [
 				new MessageEmbed()
-					.setDescription(`${current}\n\n${connection.queue.length > 0 ? ('__Queue:__\n' + queue) : 'No tracks in the queue.'}`)
+					.setDescription(`${current}\n\n${connection.shuffle ? '🔀 Shuffle enabled. Queue order will not be respected.\n\n' : ''}${connection.queue.length > 0 ? ('__Queue:__\n' + queue) : 'No tracks in the queue.'}`)
 					.setFooter(`Showing ${Math.min(Math.max(connection.queue.length, 0), 10)} of ${connection.queue.length} tracks`),
 			],
 		});

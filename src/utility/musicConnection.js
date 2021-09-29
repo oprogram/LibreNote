@@ -18,6 +18,7 @@ module.exports = class MusicConnection {
 		this.currentTrack = undefined;
 		this.queue = [];
 		this.loop = 'off';
+		this.shuffle = false;
 
 		this.voiceConnection.on('stateChange', async (_, newState) => {
 			if (newState.status === VoiceConnectionStatus.Disconnected) {
@@ -101,7 +102,19 @@ module.exports = class MusicConnection {
 		this.queueLock = true;
 		this.currentTrack = undefined;
 
-		const nextTrack = this.queue.shift();
+		let nextTrack;
+
+		if (this.shuffle) {
+			if (this.queue.length > 0) {
+				const index = Math.floor(Math.random()*this.queue.length);
+				console.log(index);
+				nextTrack = this.queue[index];
+				this.queue.splice(index, 1);
+			}
+		}
+		else {
+			nextTrack = this.queue.shift();
+		}
 		if (nextTrack) {
 			try {
 				const resource = await nextTrack.createAudioResource();
