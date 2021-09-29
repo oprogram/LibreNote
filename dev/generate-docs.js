@@ -43,7 +43,7 @@ function generateDocs() {
     // if there's markdown, do stuff
     if (markdown && markdown.length > 0) {
       const fileName = /[^/]*$/.exec(filePath)[0];
-      const directory = /[^/]*$/.exec(filePath.slice(0, -(4+fileName.length)))[0];
+      const directory = /[^/]*$/.exec(filePath.slice(0, -(1+fileName.length)))[0];
 
       console.log(directory, fileName);
 
