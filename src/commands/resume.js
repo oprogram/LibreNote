@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { AudioPlayerStatus } = require('@discordjs/voice');
-const { canPerformAction } = require('../utility/permissions');
+const { canPerformAction, isOnlyListener } = require('../utility/permissions');
 
 module.exports = {
 	// data of the command
