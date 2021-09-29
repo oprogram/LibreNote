@@ -54,7 +54,7 @@ function generateDocs() {
 
       const writeDir = path.join(
         __dirname,
-        `../docs/docs/${directory}`,
+        `../docs/docs/code/${directory}`,
       )
 
       if (!fs.existsSync(writeDir)) {
