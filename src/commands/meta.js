@@ -15,9 +15,9 @@ module.exports = {
 		await interaction.deferReply();
 
 		let commitCount;
-		await axios.get(ghAPI + '/repos/LibreNoteBot/librenote/commits')
+		await axios.get(ghAPI + '/repos/LibreNoteBot/librenote/compare/824419fa02abb81c9d52214e10dd6596ab50323e...main')
 			.then(response => {
-				commitCount = response.data.length;
+				commitCount = response.data.total_commits;
 			}).catch(error => {
 				console.warn(error);
 			});
