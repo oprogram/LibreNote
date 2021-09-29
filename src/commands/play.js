@@ -6,9 +6,11 @@ const MusicConnection = require('../utility/musicConnection');
 const Track = require('../utility/track');
 const { canPerformAction } = require('../utility/permissions');
 const { default: axios } = require('axios');
+const { getSpotifyAccessToken } = require('../utility/spotify');
 
 const YouTubeURL = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/gi;
 const YouTubePlaylistURL = /^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/g;
+const SpotifyURL = /https?:\/\/(?:embed\.|open\.)(?:spotify\.com\/)(?:track\/|\?uri=spotify:track:)((\w|-){22})/;
 
 module.exports = {
 	// data of the command
@@ -56,6 +58,42 @@ module.exports = {
 		let URL;
 		const isURL = YouTubeURL.test(songRaw);
 		const isPlaylist = YouTubePlaylistURL.test(songRaw);
+		const isSpotify = SpotifyURL.test(songRaw);
+
+		if (isSpotify) {
+			const spotifyId = (songRaw.match(SpotifyURL)) ? RegExp.$1 : null;
+			if (spotifyId) {
+				const accessToken = await getSpotifyAccessToken(interaction.client);
+				await axios.get(`https://api.spotify.com/v1/tracks/${spotifyId}`, {
+					headers: {
+						Authorization: accessToken,
+					},
+				}).then(async response => {
+					const name = response.data.name;
+					const searchResults = await search(
+						name,
+						{
+							maxResults: 1,
+							type: 'video',
+							key: process.env.YT_API_KEY,
+						},
+					);
+
+					if (searchResults.results[0]) {
+						URL = searchResults.results[0].link;
+					}
+					else {
+						return interaction.editReply('No songs found with that query.');
+					}
+				}).catch(error => {
+					console.warn(error);
+					return interaction.editReply('An error occurred when attempting to retrieve Spotify track data.');
+				});
+			}
+			else {
+				return interaction.editReply('Invalid Spotify URL');
+			}
+		}
 
 		if (isURL) { URL = songRaw; }
 		else if (isPlaylist) {
@@ -83,9 +121,7 @@ module.exports = {
 						return interaction.editReply(`I can not use playlists with more than ${isNaN(itemLimit) ? 50 : itemLimit} ${itemLimit == 1 ? 'song' : 'songs'}`);
 					}
 					playlistItems = response.data.items;
-				}).catch(error => {
-					console.warn(error);
-				});
+				}).catch(console.warn);
 
 			await interaction.editReply({
 				embeds: [
