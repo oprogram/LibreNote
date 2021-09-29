@@ -16,14 +16,11 @@ client.on('connect', function() {
 	console.log('Redis connected!');
 });
 
-/**
- * @class
- * Class to interact with redis
- */
+/** Class to interact with redis */
 module.exports = class Redis {
 
 	/**
-	 * @constructor
+	 * @constructor Redis
 	 * Creates a Redis class
 	 */
 	constructor() {

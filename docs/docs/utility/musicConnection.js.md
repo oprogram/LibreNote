@@ -5,14 +5,18 @@ id: musicConnection.js
 ## Classes
 
 <dl>
-<dt><a href="#Creates and returns a MusicConnection class">Creates and returns a MusicConnection class</a></dt>
+<dt><a href="#MusicConnection
+ Creates and returns a MusicConnection class">MusicConnection
+ Creates and returns a MusicConnection class</a></dt>
 <dd></dd>
 </dl>
 
 ## Functions
 
 <dl>
-<dt><a href="#Adds a Track class to the queue">Adds a Track class to the queue(track)</a></dt>
+<dt><a href="#addToQueue
+ Adds a Track class to the queue">addToQueue
+ Adds a Track class to the queue(track)</a></dt>
 <dd></dd>
 <dt><a href="#stop
  Stops the player and clears the queue.">stop
@@ -24,21 +28,40 @@ id: musicConnection.js
 <dd></dd>
 </dl>
 
-<a name="Creates and returns a MusicConnection class"></a>
+<a name="MusicConnection
+ Creates and returns a MusicConnection class"></a>
 
-## Creates and returns a MusicConnection class
+## MusicConnection
+ Creates and returns a MusicConnection class
 **Kind**: global class  
-<a name="new_Creates and returns a MusicConnection class_new"></a>
+**Properties**
 
-### new Creates and returns a MusicConnection class(voiceConnection)
+| Name | Type | Description |
+| --- | --- | --- |
+| voiceConnection | <code>object</code> | <p>The @discordjs/voice VoiceConnection</p> |
+| audioPlayer | <code>object</code> | <p>The @discordjs/voice audio player</p> |
+| queueLock | <code>boolean</code> | <p>Queue Lock</p> |
+| readyLock | <code>boolean</code> | <p>Ready Lock</p> |
+| currentTrack | <code>Object</code> | <p>Currently playing track</p> |
+| queue | <code>Array</code> | <p>Array of tracks queued</p> |
+| loop | <code>string</code> | <p>Loop mode</p> |
+| shuffle | <code>boolean</code> | <p>Shuffle mode</p> |
+
+<a name="new_MusicConnection
+ Creates and returns a MusicConnection class_new"></a>
+
+### new MusicConnection
+ Creates and returns a MusicConnection class(voiceConnection)
 
 | Param | Type | Description |
 | --- | --- | --- |
 | voiceConnection | <code>object</code> | <p>discord.js voice connection</p> |
 
-<a name="Adds a Track class to the queue"></a>
+<a name="addToQueue
+ Adds a Track class to the queue"></a>
 
-## Adds a Track class to the queue(track)
+## addToQueue
+ Adds a Track class to the queue(track)
 **Kind**: global function  
 
 | Param | Type | Description |

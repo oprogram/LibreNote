@@ -5,7 +5,9 @@ id: track.js
 ## Classes
 
 <dl>
-<dt><a href="#Creates a Track class from its details">Creates a Track class from its details</a></dt>
+<dt><a href="#Track
+ Creates a Track class from its details">Track
+ Creates a Track class from its details</a></dt>
 <dd></dd>
 </dl>
 
@@ -18,9 +20,11 @@ id: track.js
 <dd></dd>
 </dl>
 
-<a name="Creates a Track class from its details"></a>
+<a name="Track
+ Creates a Track class from its details"></a>
 
-## Creates a Track class from its details
+## Track
+ Creates a Track class from its details
 **Kind**: global class  
 <a name="Creates an audio resource via ytdl"></a>
 

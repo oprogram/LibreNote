@@ -6,14 +6,10 @@ const ytdl = ytdlExec.raw;
 // eslint-disable-next-line
 const noop = () => { };
 
-/**
- * @class
- * Class to hold a music track
- */
-
+/** Class to hold a music track */
 module.exports = class Track {
 	/**
-	 * @constructor
+	 * @constructor Track
 	 *  Creates a Track class from it's details
 	 */
 	constructor({ url, title, details, onStart, onFinish, onError }) {

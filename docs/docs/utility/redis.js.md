@@ -5,7 +5,9 @@ id: redis.js
 ## Classes
 
 <dl>
-<dt><a href="#Creates a Redis class">Creates a Redis class</a></dt>
+<dt><a href="#Redis
+Creates a Redis class">Redis
+Creates a Redis class</a></dt>
 <dd></dd>
 </dl>
 
@@ -30,9 +32,11 @@ Sets a keys expiration(key, time)</a> ⇒ <code>void</code></dt>
 <dd></dd>
 </dl>
 
-<a name="Creates a Redis class"></a>
+<a name="Redis
+Creates a Redis class"></a>
 
-## Creates a Redis class
+## Redis
+Creates a Redis class
 **Kind**: global class  
 <a name="getAsync
 Gets a string from the redis cache by key"></a>
