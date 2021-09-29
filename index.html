@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Home - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><h1>LibreNote</h1>
+<h2>Installation &amp; Hosting Guide</h2>
+<ol>
+<li><a href="https://discord.com/developers/applications">Create a Discord application</a> (discord bot).
+<ul>
+<li>Select <em>New Application</em>.</li>
+<li>Choose a name for your application and click <em>Create</em>.</li>
+<li>Select <em>Bot</em> on the left panel and click <em>Add Bot</em>, confirm the action.</li>
+<li>Add the bot to the servers you want it to be in.
+<ul>
+<li>https://discord.com/api/oauth2/authorize?client_id=CLIENTID&amp;permissions=8&amp;scope=bot%20applications.commands</li>
+<li>Replace <code>CLIENTID</code> in the link with the <em>APPLICATION ID</em> from <em>General Information</em>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="https://developers.google.com/youtube/v3/getting-started">Get a YouTube API key</a> &amp; enable the YouTube API.
+<ul>
+<li>You will require a <a href="https://www.google.com/accounts/NewAccount">Google Account</a>.</li>
+<li>Go to the <a href="https://console.developers.google.com/">Google Developer Console</a>
+<ul>
+<li>Agree to the terms of service.</li>
+<li>Select <em>AGREE AND CONTINUE</em>.</li>
+<li>Select <em>SKIP</em>.</li>
+<li>At the top right of your screen, in blue text, select <em>CREATE PROJECT</em>.</li>
+<li>Name the project whatever you'd like (e.g. <code>LibreNote</code>).</li>
+<li>Select <em>CREATE</em>.</li>
+<li>Wait for the project to complete creation.</li>
+</ul>
+</li>
+<li>Go to the <a href="https://console.cloud.google.com/marketplace/product/google/youtube.googleapis.com?q=search&amp;referrer=search&amp;supportedpurview=project">YouTube Data API v3</a> or search <code>YouTube Data API v3</code> in the top search bar.
+<ul>
+<li>Select <em>ENABLE</em>, if it prompts you for a project to select, select the one you just created and continue.</li>
+</ul>
+</li>
+<li>Go to the <a href="https://console.cloud.google.com/apis/credentials">Credentials page</a> or select <em>Credentials</em> on the left panel.
+<ul>
+<li>Click <em>+ CREATE CREDENTIALS</em> at the top middle-left.</li>
+<li>Select <em>API key</em>.</li>
+<li>Have this key ready for use in step 3.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3>Docker (Reccomended)</h3>
+<p>You can run LibreNote with Docker.
+Ensure you have <a href="https://www.docker.com/">Docker</a> and <a href="https://nodejs.org/">Node.js (v16)</a> installed.</p>
+<ol start="3">
+<li>Create a file named <code>librenote.env</code>, fill it with the following content:
+<ul>
+<li>Copy your bot's <strong>TOKEN</strong> from <em>Bot</em> on the left panel and place it after <code>BOT_TOKEN=</code>.</li>
+<li>Copy your bot's <strong>APPLICATION ID</strong> from <em>General Information</em> on the left panel and place it after <code>CLIENT_ID=</code>.</li>
+<li>Copy your YouTube API key created in step 2, and place it after <code>YT_API_KEY=</code>.</li>
+<li>Save the file.</li>
+</ul>
+<pre class="prettyprint source lang-env"><code>BOT_TOKEN=
+CLIENT_ID=
+YT_API_KEY=
+</code></pre>
+</li>
+<li>Open a command line and run the following commands:
+<ul>
+<li>Install &amp; start Redis with docker:<pre class="prettyprint source"><code>docker pull redis
+docker run --name main-redis -d -p 6379:6379 --restart=unless-stopped redis 
+</code></pre>
+</li>
+<li>Install &amp; start LibreNote with docker:
+<ul>
+<li>Replace <code>&lt;PATH.TO.ENV.FILE&gt;</code> with a path (can be relative) to the file created in step 3.</li>
+<li>e.g. (windows) if you created your file in Documents, the path would be <code>C:\Users\YOURUSERNAME\Documents\librenote.env</code> for <code>--env-file=C:\Users\YOURUSERNAME\Documents\librenote.env</code>.</li>
+<li>Replace <code>YOURUSERNAME</code> with your windows username.</li>
+</ul>
+<pre class="prettyprint source"><code>docker pull ghcr.io/librenotebot/librenote:latest
+docker run --name librenote --env-file=&lt;PATH.TO.ENV.FILE> -d --network=host --restart=unless-stopped ghcr.io/librenotebot/librenote:latest
+</code></pre>
+</li>
+</ul>
+</li>
+<li>LibreNote should be online in the servers you've added it to.</li>
+</ol>
+<h3>PM2</h3>
+<p>You can run LibreNote with PM2, without a process manager, or another one of your choosing.
+Ensure you have <a href="https://nodejs.org/">Node.js (v16)</a>, <a href="https://git-scm.com/downloads">Git</a> and <a href="https://medium.com/@RedisLabs/windows-subsystem-for-linux-wsl-10e3ca4d434e">Redis (Windows Subsystem for Linux, reccomended)</a> or <a href="https://github.com/microsoftarchive/redis/releases/tag/win-3.0.504">Redis (Legacy, unmaintained windows port)</a> installed.</p>
+<ol start="3">
+<li>
+<p>Open a command line and run the following.</p>
+<ul>
+<li>Clone the LibreNote repository to your PC.<pre class="prettyprint source"><code>git clone https://github.com/LibreNoteBot/LibreNote.git
+</code></pre>
+</li>
+<li>Change your directory to the one just created for the repository.<pre class="prettyprint source"><code>cd LibreNote
+</code></pre>
+</li>
+<li>Install the required npm modules.<pre class="prettyprint source"><code>npm install
+</code></pre>
+</li>
+<li>Install node PM2 (if you want to use this process manager).<pre class="prettyprint source"><code>npm install pm2 -g
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>Create a file named <code>.env</code> in the current directory, fill it with the following content:</p>
+<ul>
+<li>Copy your bot's <strong>TOKEN</strong> from <em>Bot</em> on the left panel and place it after <code>BOT_TOKEN=</code>.</li>
+<li>Copy your bot's <strong>APPLICATION ID</strong> from <em>General Information</em> on the left panel and place it after <code>CLIENT_ID=</code>.</li>
+<li>Copy your YouTube API key created in step 2, and place it after <code>YT_API_KEY=</code>.</li>
+<li>Save the file.</li>
+</ul>
+<pre class="prettyprint source lang-env"><code>BOT_TOKEN=
+CLIENT_ID=
+YT_API_KEY=
+</code></pre>
+</li>
+<li>
+<p>Enter the command line again and run the following commands.</p>
+<ul>
+<li>Register LibreNote's commands.<pre class="prettyprint source"><code>node dev/commands.js
+</code></pre>
+</li>
+<li>Run the bot without PM2, test success.<pre class="prettyprint source"><code>node dev/run.js
+</code></pre>
+</li>
+<li>If no errors are present, exit via <kbd>Ctrl</kbd> + <kbd>C</kbd>.</li>
+<li>Start LibreNote with PM2.<pre class="prettyprint source"><code>pm2 start dev/run.js --name librenote
+</code></pre>
+</li>
+<li>If you would like it to auto-restart on boot, follow <a href="https://pm2.keymetrics.io/docs/usage/startup/">this guide</a>.</li>
+</ul>
+</li>
+<li>
+<p>LibreNote should be online in the servers you've added it to.</p>
+</li>
+</ol></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Wed Sep 29 2021 15:14:18 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
