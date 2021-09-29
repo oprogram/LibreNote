@@ -68,7 +68,12 @@ module.exports = {
 				return interaction.editReply('Invalid playlist URL');
 			}
 
-			await interaction.editReply('Fetching playlist items');
+			await interaction.editReply({
+				embeds: [
+					new MessageEmbed()
+						.setDescription(':arrows_counterclockwise: Fetching playlist items...'),
+				],
+			});
 
 			let playlistItems;
 			await axios.get(`https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${process.env.YT_API_KEY}`)
@@ -81,6 +86,13 @@ module.exports = {
 				}).catch(error => {
 					console.warn(error);
 				});
+
+			await interaction.editReply({
+				embeds: [
+					new MessageEmbed()
+						.setDescription(`:arrows_counterclockwise: Fetching playlist items (0/${playlistItems.length})...`),
+				],
+			});
 
 			const success = [];
 			const fail = [];
@@ -115,7 +127,9 @@ module.exports = {
 						return interaction.followUp(`[**${track.title}**](${url}) is longer than the permitted ${isNaN(maxlength) ? 15 : maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}`);
 					}
 					else {
-						connection.addToQueue(track);
+						connection.queue.push(track);
+
+						if (success.length + fail.length === 0) connection.processQueue();
 					}
 					success.push(url);
 				}
@@ -123,9 +137,23 @@ module.exports = {
 					console.warn(error);
 					fail.push(url);
 				}
+
+				await interaction.editReply({
+					embeds: [
+						new MessageEmbed()
+							.setDescription(`:arrows_counterclockwise: Fetching playlist items (${success.length + fail.length}/${playlistItems.length})...`),
+					],
+				});
 			}
 
-			return interaction.editReply(`Successfully added ${success.length} tracks to the queue, ${fail.length} tracks failed`);
+
+			await connection.processQueue();
+			return await interaction.editReply({
+				embeds: [
+					new MessageEmbed()
+						.setDescription(`:white_check_mark: Successfully added ${success.length} tracks to the queue, ${fail.length} tracks failed`),
+				],
+			});
 		}
 
 		if (!URL) {
@@ -184,7 +212,7 @@ module.exports = {
 				return interaction.editReply(`I cannot play songs longer than ${isNaN(maxlength) ? 15 : maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}`);
 			}
 			else {
-				connection.addToQueue(track);
+				await connection.addToQueue(track);
 			}
 			await interaction.editReply({
 				embeds: [

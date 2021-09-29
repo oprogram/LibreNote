@@ -82,9 +82,9 @@ module.exports = class MusicConnection {
 		voiceConnection.subscribe(this.audioPlayer);
 	}
 
-	addToQueue(track) {
+	async addToQueue(track) {
 		this.queue.push(track);
-		this.processQueue();
+		await this.processQueue();
 	}
 
 	stop() {
