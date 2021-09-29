@@ -36,5 +36,5 @@ jobs:
           else
             npm i
           fi
-          docusaurus deploy
+          npx docusaurus deploy
 
