@@ -9,10 +9,22 @@ const {
 const { promisify } = require('util');
 const wait = promisify(setTimeout);
 
+/**
+ * Class to hold a music connection
+ * @property {object} voiceConnection - The @discordjs/voice VoiceConnection
+ * @property {object} audioPlayer - The @discordjs/voice audio player
+ * @property {boolean} queueLock - Queue Lock
+ * @property {boolean} readyLock - Ready Lock
+ * @property {Object} currentTrack - Currently playing track
+ * @property {Array} queue - Array of tracks queued
+ * @property {string} loop - Loop mode
+ * @property {boolean} shuffle - Shuffle mode
+ * @class
+ */
 module.exports = class MusicConnection {
 	/**
-	 *  Creates and returns a MusicConnection class
 	 * @constructor
+	 *  Creates and returns a MusicConnection class
 	 * @param {object} voiceConnection discord.js voice connection
 	 */
 	constructor(voiceConnection) {
@@ -89,6 +101,7 @@ module.exports = class MusicConnection {
 	}
 
 	/**
+	 * @method
 	 *  Adds a Track class to the queue
 	 * @param {object} track Track Class
 	 */
@@ -98,6 +111,7 @@ module.exports = class MusicConnection {
 	}
 
 	/**
+	 * @method stop
 	 *  Stops the player and clears the queue.
 	 */
 	stop() {
@@ -107,6 +121,7 @@ module.exports = class MusicConnection {
 	}
 
 	/**
+	 * @method processQueue
 	 *  Processes the queue, plays the next track if there is one.
 	 */
 	async processQueue() {

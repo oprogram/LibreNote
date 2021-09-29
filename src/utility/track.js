@@ -6,10 +6,15 @@ const ytdl = ytdlExec.raw;
 // eslint-disable-next-line
 const noop = () => { };
 
+/**
+ * @class
+ * Class to hold a music track
+ */
+
 module.exports = class Track {
 	/**
-	 *  Creates a Track class from it's details
 	 * @constructor
+	 *  Creates a Track class from it's details
 	 */
 	constructor({ url, title, details, onStart, onFinish, onError }) {
 		this.url = url;
@@ -23,6 +28,7 @@ module.exports = class Track {
 	}
 
 	/**
+	 * @method
 	 *  Creates an audio resource via ytdl
 	 */
 	createAudioResource() {
@@ -59,6 +65,7 @@ module.exports = class Track {
 	}
 
 	/**
+	 * @method
 	 *  Creates and returns a Track class from a YouTube URL and provided callbacks
 	 * @param {string} url YouTube video URL
 	 * @param {object} methods Callback methods
