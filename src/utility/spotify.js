@@ -3,7 +3,7 @@ const axios = require('axios');
 const max_retries = 3;
 
 /**
- * Gets a spotify access token, either from Redis or the Spotify API.
+ * @description Gets a spotify access token, either from Redis or the Spotify API.
  * @param {object} client Client object from discord.js
  * @param {boolean} nocache If true, the cache will be skipped and go straight to the Spotify API
  */

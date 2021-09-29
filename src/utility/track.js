@@ -10,7 +10,7 @@ const noop = () => { };
 module.exports = class Track {
 	/**
 	 * @constructor Track
-	 *  Creates a Track class from it's details
+	 * @description Creates a Track class from it's details
 	 */
 	constructor({ url, title, details, onStart, onFinish, onError }) {
 		this.url = url;
@@ -24,8 +24,8 @@ module.exports = class Track {
 	}
 
 	/**
-	 * @method
-	 *  Creates an audio resource via ytdl
+	 * @method createAudioResource
+	 * @description Creates an audio resource via ytdl
 	 */
 	createAudioResource() {
 		return new Promise((resolve, reject) => {
@@ -61,8 +61,8 @@ module.exports = class Track {
 	}
 
 	/**
-	 * @method
-	 *  Creates and returns a Track class from a YouTube URL and provided callbacks
+	 * @method from
+	 * @description Creates and returns a Track class from a YouTube URL and provided callbacks
 	 * @param {string} url YouTube video URL
 	 * @param {object} methods Callback methods
 	 */

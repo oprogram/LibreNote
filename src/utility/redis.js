@@ -21,19 +21,19 @@ module.exports = class Redis {
 
 	/**
 	 * @constructor Redis
-	 * Creates a Redis class
+	 * @description Creates a Redis class
 	 */
 	constructor() {
 		/**
 		 * @method getAsync
-		 * Gets a string from the redis cache by key
+		 * @description Gets a string from the redis cache by key
 		 * @param {string} key The key
 		 * @returns {string} The value
 		 */
 		this.getAsync = promisify(client.get).bind(client);
 		/**
 		 * @method setAsync
-		 * Sets a value with the provided key
+		 * @description Sets a value with the provided key
 		 * @param {string} key The key
 		 * @param {string} value The value
 		 * @returns {void}
@@ -42,7 +42,7 @@ module.exports = class Redis {
 
 		/**
 		 * @method delAsync
-		 * Deletes the entry with the specific key
+		 * @description Deletes the entry with the specific key
 		 * @param {string} key The key
 		 * @returns {void}
 		 */
@@ -53,7 +53,7 @@ module.exports = class Redis {
 
 		/**
 		 * @method expireAsync
-		 * Set's a key's expiration
+		 * @description Set's a key's expiration
 		 * @param {string} key The key
 		 * @param {number} time Time until the key should expire, in seconds
 		 * @returns {void}

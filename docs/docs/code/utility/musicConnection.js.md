@@ -14,10 +14,8 @@ id: musicConnection.js
 ## Functions
 
 <dl>
-<dt><a href="#addToQueue
- Adds a Track class to the queue">addToQueue
- Adds a Track class to the queue(track)</a></dt>
-<dd></dd>
+<dt><a href="#addToQueue">addToQueue(track)</a></dt>
+<dd><p>Adds a Track class to the queue</p></dd>
 <dt><a href="#stop
  Stops the player and clears the queue.">stop
  Stops the player and clears the queue.()</a></dt>
@@ -57,11 +55,11 @@ id: musicConnection.js
 | --- | --- | --- |
 | voiceConnection | <code>object</code> | <p>discord.js voice connection</p> |
 
-<a name="addToQueue
- Adds a Track class to the queue"></a>
+<a name="addToQueue"></a>
 
-## addToQueue
- Adds a Track class to the queue(track)
+## addToQueue(track)
+<p>Adds a Track class to the queue</p>
+
 **Kind**: global function  
 
 | Param | Type | Description |
