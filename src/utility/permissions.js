@@ -24,3 +24,6 @@ module.exports.canPerformAction = async (GuildMember) => {
 	return module.exports.isDJ(GuildMember);
 };
 
+module.exports.isOnlyListener = async (GuildMember) => {
+	return GuildMember.voice.channel.members.size <= 2;
+};
