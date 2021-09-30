@@ -5,6 +5,11 @@ const max_retries = 3;
 const spotifyURL = /https?:\/\/(?:embed\.|open\.)(?:spotify\.com\/)(?:track\/|\?uri=spotify:track:)((\w|-){22})/;
 
 /**
+ * @module spotify
+ * @description Module to handle communication with Spotify APIs
+ */
+
+/**
  * @function isTrackURL
  * @param {string} URL The URL you want to test
  * @returns {boolean} If the URL is a Spotify Track URL or not

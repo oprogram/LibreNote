@@ -1,4 +1,9 @@
 /**
+ * @module permissions
+ * @description Module to handle command/action permissions
+ */
+
+/**
  * @description Checks if a guild member is a DJ
  * @param {object} GuildMember GuildMember from discord.js
  */
