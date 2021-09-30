@@ -1,16 +1,12 @@
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { joinVoiceChannel, entersState, VoiceConnectionStatus } = require('@discordjs/voice');
-const search = require('youtube-search');
 const MusicConnection = require('../utility/musicConnection');
 const Track = require('../utility/track');
 const { canPerformAction } = require('../utility/permissions');
-const { default: axios } = require('axios');
-const { getYoutubeFromSpotify } = require('../utility/spotify');
 
-const YouTubeURL = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/gi;
-const YouTubePlaylistURL = /^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/g;
-const SpotifyURL = /https?:\/\/(?:embed\.|open\.)(?:spotify\.com\/)(?:track\/|\?uri=spotify:track:)((\w|-){22})/;
+const youtube = require('../utility/youtube');
+const spotify = require('../utility/spotify');
 
 module.exports = {
 	// data of the command
@@ -54,147 +50,8 @@ module.exports = {
 
 		const maxlength = parseInt(await interaction.client.db.getAsync(`librenote:settings:${interaction.guild.id}:maxlength`));
 
-		const songRaw = interaction.options.get('song').value;
-		let URL;
-		const isURL = YouTubeURL.test(songRaw);
-		const isPlaylist = YouTubePlaylistURL.test(songRaw);
-		const isSpotify = SpotifyURL.test(songRaw);
-
-		if (isURL) { URL = songRaw; }
-		else if (isPlaylist) {
-			let playlistId;
-			const match = new RegExp('[&?]list=([a-z0-9_-]+)', 'i').exec(songRaw);
-			if (match && match[1].length > 0) {
-				playlistId = match[1];
-			}
-			else {
-				return interaction.editReply('Invalid playlist URL');
-			}
-
-			await interaction.editReply({
-				embeds: [
-					new MessageEmbed()
-						.setDescription(':arrows_counterclockwise: Fetching playlist items...'),
-				],
-			});
-
-			let playlistItems;
-			await axios.get(`https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${process.env.YT_API_KEY}`)
-				.then(async response => {
-					const itemLimit = parseInt(await interaction.client.db.getAsync(`librenote:settings:${interaction.guild.id}:playlistmax`));
-					if (response.data.items.length > (isNaN(itemLimit) ? 50 : itemLimit)) {
-						return interaction.editReply(`I can not use playlists with more than ${isNaN(itemLimit) ? 50 : itemLimit} ${itemLimit == 1 ? 'song' : 'songs'}`);
-					}
-					playlistItems = response.data.items;
-				}).catch(console.warn);
-
-			await interaction.editReply({
-				embeds: [
-					new MessageEmbed()
-						.setDescription(`:arrows_counterclockwise: Fetching playlist items (0/${playlistItems.length})...`),
-				],
-			});
-
-			const success = [];
-			const fail = [];
-
-			for (const item of playlistItems) {
-				const url = 'https://www.youtube.com/watch?v=' + item.snippet.resourceId.videoId;
-				try {
-					const track = await Track.from(url, {
-						onStart() {
-							interaction.followUp({
-								embeds: [
-									new MessageEmbed()
-										.setDescription(`[${track.title}](${track.url})\n\n\`Requested by:\` ${interaction.user.tag}`)
-										.setAuthor('Now Playing', interaction.client.user.avatarURL())
-										.setThumbnail(track.details.thumbnails[3].url)
-										.addField('Channel', track.details.author.name, true)
-										.addField('Duration', new Date(Number(track.details.lengthSeconds) * 1000).toISOString().substr(11, 8), true),
-								],
-							}).catch(console.warn);
-						},
-						onFinish() {
-							//	a
-						},
-						onError(error) {
-							console.warn(error);
-							interaction.followUp(`Error: ${error.message}`).catch(console.warn);
-						},
-					});
-					track.requestedBy = interaction.user.tag;
-
-					if (Number(track.details.lengthSeconds) > 60 * (isNaN(maxlength) ? 15 : maxlength)) {
-						return interaction.followUp(`[**${track.title}**](${url}) is longer than the permitted ${isNaN(maxlength) ? 15 : maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}`);
-					}
-					else {
-						connection.queue.push(track);
-
-						if (success.length + fail.length === 0) connection.processQueue();
-					}
-					success.push(url);
-				}
-				catch (error) {
-					console.warn(error);
-					fail.push(url);
-				}
-
-				await interaction.editReply({
-					embeds: [
-						new MessageEmbed()
-							.setDescription(`:arrows_counterclockwise: Fetching playlist items (${success.length + fail.length}/${playlistItems.length})...`),
-					],
-				});
-			}
-
-
-			await connection.processQueue();
-			return await interaction.editReply({
-				embeds: [
-					new MessageEmbed()
-						.setDescription(`:white_check_mark: Successfully added ${success.length} tracks to the queue, ${fail.length} tracks failed`),
-				],
-			});
-		}
-		else if (isSpotify) {
-			await getYoutubeFromSpotify(interaction.client, songRaw)
-				.then(response => {
-					URL = response;
-				}).catch(error => {
-					console.warn(error);
-					return interaction.editReply('An error occurred when interacting with Spotify track');
-				});
-		}
-
-		if (!URL) {
-			// Search youtube for song
-			const searchResults = await search(
-				songRaw,
-				{
-					maxResults: 1,
-					type: 'video',
-					key: process.env.YT_API_KEY,
-				},
-			);
-
-			if (searchResults.results[0]) {
-				URL = searchResults.results[0].link;
-			}
-			else {
-				return interaction.editReply('No songs found with that query.');
-			}
-		}
-
-		try {
-			await entersState(connection.voiceConnection, VoiceConnectionStatus.Ready, 20e3);
-		}
-		catch (error) {
-			console.warn(error);
-			await interaction.followUp('Failed to join voice channel within 20 seconds, please try again later!');
-			return;
-		}
-
-		try {
+		/* Method to create track, used by standard handling and playlist handling */
+		const createTrack = async (URL) => {
 			const track = await Track.from(URL, {
 				onStart() {
 					interaction.followUp({
@@ -217,6 +74,156 @@ module.exports = {
 				},
 			});
 			track.requestedBy = interaction.user.tag;
+
+			return track;
+		};
+
+		/* Convert raw song (query, url, etc) to YouTube video URL for track class */
+
+		const songRaw = interaction.options.getString('song');
+		let YouTubeVideoURL;
+
+		if (youtube.isVideoURL(songRaw)) {
+			// Handle YTURL, normal handling.
+			YouTubeVideoURL = songRaw;
+		}
+		else if (youtube.isPlaylistURL(songRaw)) {
+			// Handle youtube playlist.
+			const playlistId = youtube.getPlaylistId(songRaw);
+
+			if (!playlistId) {
+				return interaction.editReply({
+					embeds: [
+						new MessageEmbed()
+							.setColor('RED')
+							.setDescription('Could not obtain playlist id from URL.'),
+					],
+				});
+			}
+
+			const playlistItems = await youtube.getPlaylistItems(playlistId);
+
+			const itemLimit = parseInt(await interaction.client.db.getAsync(`librenote:settings:${interaction.guild.id}:playlistmax`));
+			if (playlistItems.length > (isNaN(itemLimit) ? 50 : itemLimit)) {
+				// todo: instead of rejecting, just only allow the first (itemLimit ?? 50) items in the array and notify that that only that many could be added
+				return interaction.editReply(`I can not use playlists with more than ${isNaN(itemLimit) ? 50 : itemLimit} ${itemLimit == 1 ? 'song' : 'songs'}`);
+			}
+
+			await interaction.editReply({
+				embeds: [
+					new MessageEmbed()
+						.setDescription(`:arrows_counterclockwise: Loading playlist items (0/${playlistItems.length})...`),
+				],
+			});
+
+			const success = [];
+			const fail = [];
+
+			for (const item of playlistItems) {
+				const url = 'https://www.youtube.com/watch?v=' + item.snippet.resourceId.videoId;
+				try {
+					const track = await createTrack(url);
+
+					if (Number(track.details.lengthSeconds) > 60 * (isNaN(maxlength) ? 15 : maxlength)) {
+						interaction.followUp(`[**${track.title}**](<${url}>) is longer than the permitted ${isNaN(maxlength) ? 15 : maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}`);
+						fail.push(url);
+					}
+					else {
+						connection.queue.push(track);
+
+						if (success.length === 0) connection.processQueue();
+
+						success.push(url);
+					}
+				}
+				catch (error) {
+					console.warn(error);
+					fail.push(url);
+				}
+
+				await interaction.editReply({
+					embeds: [
+						new MessageEmbed()
+							.setDescription(`:arrows_counterclockwise: Fetching playlist items (${success.length + fail.length}/${playlistItems.length})...`),
+					],
+				});
+			}
+
+
+			await connection.processQueue();
+			return await interaction.editReply({
+				embeds: [
+					new MessageEmbed()
+						.setDescription(`:white_check_mark: Successfully added ${success.length} tracks to the queue, could not add ${fail.length} tracks.`),
+				],
+			});
+		}
+		else if (spotify.isTrackURL(songRaw)) {
+			// Handle spotify track/convert to YTURL, normal handling.
+			try {
+				const equivalentMusic = await spotify.getYoutubeFromSpotify(interaction.client, songRaw);
+
+				if (equivalentMusic) {
+					YouTubeVideoURL = equivalentMusic;
+				}
+			}
+			catch (error) {
+				return interaction.editReply({
+					embeds: [
+						new MessageEmbed()
+							.setColor('RED')
+							.setDescription(error),
+					],
+				});
+			}
+		}
+		else if (spotify.isPlaylistURL(songRaw)) {
+			// Handle spotify playlist
+
+			return;
+		}
+		else {
+			// YouTube fuzzy search
+			const songURL = await youtube.searchByQuery(songRaw);
+
+			if (songURL) {
+				YouTubeVideoURL = songURL;
+			}
+			else {
+				return interaction.editReply({
+					embeds: [
+						new MessageEmbed()
+							.setColor('RED')
+							.setDescription('No track found with that query.'),
+					],
+				});
+			}
+		}
+
+		if (!YouTubeVideoURL) {
+			return interaction.editReply({
+				embeds: [
+					new MessageEmbed()
+						.setColor('RED')
+						.setDescription('A logical error occured while attempting to resolve that track.'),
+				],
+			});
+		}
+
+		/* Join voice channel */
+		try {
+			await entersState(connection.voiceConnection, VoiceConnectionStatus.Ready, 20e3);
+		}
+		catch (error) {
+			console.warn(error);
+			await interaction.followUp('Failed to join voice channel within 20 seconds, please try again later!');
+			return;
+		}
+
+		/* Create & play track */
+
+		try {
+			const track = await createTrack(YouTubeVideoURL);
 
 			if (Number(track.details.lengthSeconds) > 60 * (isNaN(maxlength) ? 15 : maxlength)) {
 				return interaction.editReply(`I cannot play songs longer than ${isNaN(maxlength) ? 15 : maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}`);

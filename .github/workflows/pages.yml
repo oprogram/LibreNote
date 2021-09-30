@@ -17,6 +17,9 @@ jobs:
           node-version: '16'
       - run: npm i -g docusaurus
       - run: npm install
+      - run: cd docs
+      - run: npm i
+      - run: cd ..
       - run: node dev/generate-docs.js
       - run: cd docs
       - uses: webfactory/ssh-agent@v0.5.0

@@ -2,6 +2,27 @@ const axios = require('axios');
 const search = require('youtube-search');
 
 const max_retries = 3;
+const spotifyURL = /https?:\/\/(?:embed\.|open\.)(?:spotify\.com\/)(?:track\/|\?uri=spotify:track:)((\w|-){22})/;
+
+/**
+ * @function isTrackURL
+ * @param {string} URL The URL you want to test
+ * @returns {boolean} If the URL is a Spotify Track URL or not
+ */
+module.exports.isTrackURL = (URL) => {
+	return spotifyURL.test(URL);
+};
+
+/**
+ * @function isPlaylistURL
+ * @param {string} URL The URL you want to test
+ * @returns {boolean} If the URL is a Spotify Playlist URL or not
+ */
+module.exports.isPlaylistURL = () => {
+	// TODO
+	return false;
+};
+
 
 /**
  * @description Gets a spotify access token, either from Redis or the Spotify API.
@@ -67,7 +88,6 @@ module.exports.getSpotifyAccessToken = async (client, nocache, retry) => {
 module.exports.getYoutubeFromSpotify = (client, url) => {
 	return new Promise((resolve, reject) => {
 		(async () => {
-			const spotifyURL = /https?:\/\/(?:embed\.|open\.)(?:spotify\.com\/)(?:track\/|\?uri=spotify:track:)((\w|-){22})/;
 			const spotifyId = (url.match(spotifyURL)) ? RegExp.$1 : null;
 			if (spotifyId) {
 				const accessToken = await module.exports.getSpotifyAccessToken(client);

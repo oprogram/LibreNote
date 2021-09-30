@@ -120,7 +120,6 @@
     "ytdl-core": "^4.9.1"
   },
   "scripts": {
-    "postinstall": "cd docs && npm i && cd ..",
     "docs": "node dev/generate-docs.js && cd docs && npm run build && npm run serve"
   },
   "repository": {
