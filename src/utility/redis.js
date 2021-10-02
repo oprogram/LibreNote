@@ -28,7 +28,7 @@ module.exports = class Redis {
 		 * @method getAsync
 		 * @description Gets a string from the redis cache by key
 		 * @param {string} key The key
-		 * @returns {string} The value
+		 * @returns {Promise<string>} The value
 		 */
 		this.getAsync = promisify(client.get).bind(client);
 
@@ -37,7 +37,7 @@ module.exports = class Redis {
 		 * @description Sets a value with the provided key
 		 * @param {string} key The key
 		 * @param {string} value The value
-		 * @returns {void}
+		 * @returns {Promise<void>}
 		 */
 		this.setAsync = promisify(client.set).bind(client);
 
@@ -45,7 +45,7 @@ module.exports = class Redis {
 		 * @method delAsync
 		 * @description Deletes the entry with the specific key
 		 * @param {string} key The key
-		 * @returns {void}
+		 * @returns {Promise<void>}
 		 */
 		this.delAsync = promisify(client.del).bind(client);
 
@@ -57,7 +57,7 @@ module.exports = class Redis {
 		 * @description Set's a key's expiration
 		 * @param {string} key The key
 		 * @param {number} time Time until the key should expire, in seconds
-		 * @returns {void}
+		 * @returns {Promise<void>}
 		 */
 		this.expireAsync = promisify(client.expire).bind(client);
 
@@ -68,7 +68,7 @@ module.exports = class Redis {
 	 * @method getNumberAsync
 	 * @description Gets a number from the redis cache by key
 	 * @param {string} key The key
-	 * @returns {Promise<number|null>} The value
+	 * @returns {Promise<number|null>} The value or null if there is no number
 	*/
 	getNumberAsync(key) {
 		return new Promise((resolve, reject) => {
