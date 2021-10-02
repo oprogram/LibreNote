@@ -3,6 +3,7 @@ const search = require('youtube-search');
 
 const max_retries = 3;
 const spotifyURL = /https?:\/\/(?:embed\.|open\.)(?:spotify\.com\/)(?:track\/|\?uri=spotify:track:)((\w|-){22})/;
+const spotifyPlaylistURL = /^(https:\/\/open.spotify.com\/playlist\/)([a-zA-Z0-9]+)(.*)$/;
 
 /**
  * @module spotify
@@ -23,11 +24,9 @@ module.exports.isTrackURL = (URL) => {
  * @param {string} URL The URL you want to test
  * @returns {boolean} If the URL is a Spotify Playlist URL or not
  */
-module.exports.isPlaylistURL = () => {
-	// TODO
-	return false;
+module.exports.isPlaylistURL = (URL) => {
+	return spotifyPlaylistURL.test(URL);
 };
-
 
 /**
  * @description Gets a spotify access token, either from Redis or the Spotify API.
@@ -89,7 +88,6 @@ module.exports.getSpotifyAccessToken = async (client, nocache, retry) => {
  * @param {string} url Spotify URL
  * @returns {Promise<string>} Resolves to Youtube video URL
  */
-
 module.exports.getYoutubeFromSpotify = (client, url) => {
 	return new Promise((resolve, reject) => {
 		(async () => {
@@ -123,6 +121,40 @@ module.exports.getYoutubeFromSpotify = (client, url) => {
 			}
 			else {
 				reject('Invalid Spotify URL');
+			}
+		})();
+	});
+};
+
+/**
+ * @description Converts tracks in a Spotify playlist to Youtube URLs
+ * @param {object} client Client object from discord.js
+ * @param {string} url Spotify playlist URL
+ * @returns {Promise<Array<string>>} The array of Youtube URLs
+ */
+module.exports.getYoutubeFromPlaylist = (client, url) => {
+	return new Promise((resolve, reject) => {
+		(async () => {
+			const playlistId = (url.match(spotifyPlaylistURL)) ? RegExp.$2 : null;
+			if (playlistId) {
+				const accessToken = await module.exports.getSpotifyAccessToken(client);
+				if (!accessToken) { reject('Invalid Spotify access token'); }
+				await axios.get(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+					headers: {
+						Authorization: accessToken,
+					},
+				}).then(async response => {
+					const urls = [];
+					for (const item of response.data.tracks.items) {
+						await module.exports.getYoutubeFromSpotify(client, item.track.external_urls.spotify)
+							.then(yturl => { urls.push(yturl); })
+							.catch(reject);
+					}
+					resolve(urls);
+				}).catch(reject);
+			}
+			else {
+				reject('Invalid playlist URL');
 			}
 		})();
 	});

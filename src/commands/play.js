@@ -48,7 +48,8 @@ module.exports = {
 			return interaction.editReply('An error occured while attempting to play music.');
 		}
 
-		const maxlength = parseInt(await interaction.client.db.getAsync(`librenote:settings:${interaction.guild.id}:maxlength`));
+		const maxlength = (await interaction.client.db.getNumberAsync(`librenote:settings:${interaction.guild.id}:maxlength`) ?? 15);
+		const playlistmax = (await interaction.client.db.getNumberAsync(`librenote:settings:${interaction.guild.id}:playlistmax`) ?? 50);
 
 		/* Method to create track, used by standard handling and playlist handling */
 		const createTrack = async (URL) => {
@@ -103,18 +104,25 @@ module.exports = {
 
 			const playlistItems = await youtube.getPlaylistItems(playlistId);
 
-			const itemLimit = parseInt(await interaction.client.db.getAsync(`librenote:settings:${interaction.guild.id}:playlistmax`));
-			if (playlistItems.length > (isNaN(itemLimit) ? 50 : itemLimit)) {
-				// todo: instead of rejecting, just only allow the first (itemLimit ?? 50) items in the array and notify that that only that many could be added
-				return interaction.editReply(`I can not use playlists with more than ${isNaN(itemLimit) ? 50 : itemLimit} ${itemLimit == 1 ? 'song' : 'songs'}`);
-			}
+			const totalLength = (playlistItems.length >= playlistmax) ? playlistmax : playlistItems.length;
 
 			await interaction.editReply({
 				embeds: [
 					new MessageEmbed()
-						.setDescription(`:arrows_counterclockwise: Loading playlist items (0/${playlistItems.length})...`),
+						.setDescription(`:arrows_counterclockwise: Loading playlist items (0/${totalLength})...`),
 				],
 			});
+
+			if (playlistItems.length >= playlistmax) {
+				await interaction.followUp({
+					embeds: [
+						new MessageEmbed()
+							.setColor('RED')
+							.setDescription(`This playlist (${playlistItems.length} tracks) will be cut to comply with the \`playlistmax\` configuration of ${playlistmax} tracks`),
+					],
+				});
+				playlistItems.length = totalLength;
+			}
 
 			const success = [];
 			const fail = [];
@@ -124,8 +132,8 @@ module.exports = {
 				try {
 					const track = await createTrack(url);
 
-					if (Number(track.details.lengthSeconds) > 60 * (isNaN(maxlength) ? 15 : maxlength)) {
-						interaction.followUp(`[**${track.title}**](<${url}>) is longer than the permitted ${isNaN(maxlength) ? 15 : maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}`);
+					if (Number(track.details.lengthSeconds) > 60 * maxlength) {
+						interaction.followUp(`[**${track.title}**](<${url}>) is longer than the permitted ${maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}`);
 						fail.push(url);
 					}
 					else {
@@ -144,7 +152,7 @@ module.exports = {
 				await interaction.editReply({
 					embeds: [
 						new MessageEmbed()
-							.setDescription(`:arrows_counterclockwise: Fetching playlist items (${success.length + fail.length}/${playlistItems.length})...`),
+							.setDescription(`:arrows_counterclockwise: Fetching playlist items (${success.length + fail.length}/${totalLength})...`),
 					],
 				});
 			}
@@ -179,6 +187,71 @@ module.exports = {
 		}
 		else if (spotify.isPlaylistURL(songRaw)) {
 			// Handle spotify playlist
+
+			await spotify.getYoutubeFromPlaylist(interaction.client, songRaw)
+				.then(async response => {
+
+					const totalLength = (response.length >= playlistmax) ? playlistmax : response.length;
+
+					await interaction.editReply({
+						embeds: [
+							new MessageEmbed()
+								.setDescription(`:arrows_counterclockwise: Loading playlist items (0/${totalLength})...`),
+						],
+					});
+
+					if (response.length >= playlistmax) {
+						await interaction.followUp({
+							embeds: [
+								new MessageEmbed()
+									.setColor('RED')
+									.setDescription(`This playlist (${response.length} tracks) will be cut to comply with the \`playlistmax\` configuration of ${playlistmax} tracks`),
+							],
+						});
+						response.length = totalLength;
+					}
+
+					const success = [];
+					const fail = [];
+
+					for (const url of response) {
+						try {
+							const track = await createTrack(url);
+
+							if (Number(track.details.lengthSeconds) > 60 * maxlength) {
+								interaction.followUp(`[**${track.title}**](<${url}>) is longer than the permitted ${maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}`);
+								fail.push(url);
+							}
+							else {
+								connection.queue.push(track);
+
+								if (success.length === 0) connection.processQueue();
+
+								success.push(url);
+							}
+						}
+						catch (error) {
+							console.warn(error);
+							fail.push(url);
+						}
+
+						await interaction.editReply({
+							embeds: [
+								new MessageEmbed()
+									.setDescription(`:arrows_counterclockwise: Fetching playlist items (${success.length + fail.length}/${totalLength})...`),
+							],
+						});
+					}
+
+					await connection.processQueue();
+					return await interaction.editReply({
+						embeds: [
+							new MessageEmbed()
+								.setDescription(`:white_check_mark: Successfully added ${success.length} tracks to the queue, could not add ${fail.length} tracks.`),
+						],
+					});
+				})
+				.catch(console.warn);
 
 			return;
 		}
@@ -225,8 +298,8 @@ module.exports = {
 		try {
 			const track = await createTrack(YouTubeVideoURL);
 
-			if (Number(track.details.lengthSeconds) > 60 * (isNaN(maxlength) ? 15 : maxlength)) {
-				return interaction.editReply(`I cannot play songs longer than ${isNaN(maxlength) ? 15 : maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}`);
+			if (Number(track.details.lengthSeconds) > 60 * maxlength) {
+				return interaction.editReply(`I cannot play songs longer than ${maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}`);
 			}
 			else {
 				await connection.addToQueue(track);
