@@ -1,5 +1,4 @@
 # LibreNote
-
 ## Installation & Hosting Guide
 
 1. [Create a Discord application](https://discord.com/developers/applications) (discord bot).
@@ -9,22 +8,14 @@
     * Add the bot to the servers you want it to be in.
         * https://discord.com/api/oauth2/authorize?client_id=CLIENTID&permissions=8&scope=bot%20applications.commands
         * Replace `CLIENTID` in the link with the *APPLICATION ID* from *General Information*. 
-2. [Get a YouTube API key](https://developers.google.com/youtube/v3/getting-started) & enable the YouTube API.
-    * You will require a [Google Account](https://www.google.com/accounts/NewAccount).
-    * Go to the [Google Developer Console](https://console.developers.google.com/)
-        * Agree to the terms of service.
-        * Select *AGREE AND CONTINUE*.
-        * Select *SKIP*.
-        * At the top right of your screen, in blue text, select *CREATE PROJECT*.
-        * Name the project whatever you'd like (e.g. `LibreNote`).
+2. [Get a Spotify Client ID & Secret](https://developer.spotify.com/documentation/general/guides/app-settings/#register-your-app).
+    * You will require a [Spotify Account](https://www.spotify.com/signup).
+    * Go to your [Spotify Dashboard](https://developer.spotify.com/dashboard/)
+        * Select *CREATE AN APP*
+        * Enter an App name and App description.
+        * Read & agree to the developer terms & branding guidelines.
         * Select *CREATE*.
-        * Wait for the project to complete creation.
-    * Go to the [YouTube Data API v3](https://console.cloud.google.com/marketplace/product/google/youtube.googleapis.com?q=search&referrer=search&supportedpurview=project) or search `YouTube Data API v3` in the top search bar.
-        * Select *ENABLE*, if it prompts you for a project to select, select the one you just created and continue.
-    * Go to the [Credentials page](https://console.cloud.google.com/apis/credentials) or select *Credentials* on the left panel.
-        * Click *+ CREATE CREDENTIALS* at the top middle-left.
-        * Select *API key*.
-        * Have this key ready for use in step 3.
+        * Have your *Client ID* and *Client Secret* ready for Step 3.
 
 ### Docker (Reccomended)
 You can run LibreNote with Docker.
@@ -33,12 +24,13 @@ Ensure you have [Docker](https://www.docker.com/) and [Node.js (v16)](https://no
 3. Create a file named `librenote.env`, fill it with the following content:
     * Copy your bot's **TOKEN** from *Bot* on the left panel and place it after `BOT_TOKEN=`.
     * Copy your bot's **APPLICATION ID** from *General Information* on the left panel and place it after `CLIENT_ID=`.
-    * Copy your YouTube API key created in step 2, and place it after `YT_API_KEY=`.
+    * Copy your Spotify **Client ID** created in step 2, and place it after `SPOTIFY_CLIENT_ID=`.
+    * Copy your Spotify **Client Secret** created in step 2, and place it after `SPOTIFY_CLIENT_SECRET=`.
     * Save the file.
     ```env
     BOT_TOKEN=
-    CLIENT_ID=
-    YT_API_KEY=
+    SPOTIFY_CLIENT_ID=
+    SPOTIFY_CLIENT_SECRET=
     ```
 4. Open a command line and run the following commands:
     * Install & start Redis with docker:
@@ -81,12 +73,13 @@ Ensure you have [Node.js (v16)](https://nodejs.org/), [Git](https://git-scm.com/
 4. Create a file named `.env` in the current directory, fill it with the following content:
     * Copy your bot's **TOKEN** from *Bot* on the left panel and place it after `BOT_TOKEN=`.
     * Copy your bot's **APPLICATION ID** from *General Information* on the left panel and place it after `CLIENT_ID=`.
-    * Copy your YouTube API key created in step 2, and place it after `YT_API_KEY=`.
+    * Copy your Spotify **Client ID** created in step 2, and place it after `SPOTIFY_CLIENT_ID=`.
+    * Copy your Spotify **Client Secret** created in step 2, and place it after `SPOTIFY_CLIENT_SECRET=`.
     * Save the file.
     ```env
     BOT_TOKEN=
-    CLIENT_ID=
-    YT_API_KEY=
+    SPOTIFY_CLIENT_ID=
+    SPOTIFY_CLIENT_SECRET=
     ```
 
 5. Enter the command line again and run the following commands.
