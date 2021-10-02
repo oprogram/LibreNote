@@ -31,6 +31,7 @@ module.exports = class Redis {
 		 * @returns {string} The value
 		 */
 		this.getAsync = promisify(client.get).bind(client);
+
 		/**
 		 * @method setAsync
 		 * @description Sets a value with the provided key
@@ -61,5 +62,21 @@ module.exports = class Redis {
 		this.expireAsync = promisify(client.expire).bind(client);
 
 		this.scanAsync = promisify(client.scan).bind(client);
+	}
+
+	/**
+	 * @method getNumberAsync
+	 * @description Gets a number from the redis cache by key
+	 * @param {string} key The key
+	 * @returns {Promise<number|null>} The value
+	*/
+	getNumberAsync(key) {
+		return new Promise((resolve, reject) => {
+			this.getAsync(key).then(value => {
+				const number = parseInt(value);
+
+				resolve(isNaN(number) ? null : number);
+			}).catch(reject);
+		});
 	}
 };
