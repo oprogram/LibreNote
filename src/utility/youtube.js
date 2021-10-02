@@ -1,8 +1,6 @@
-const axios = require('axios');
-
 const VideoURL = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/gi;
 const PlaylistURL = /^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/g;
-const search = require('youtube-search');
+const ytSearchAPI = require('youtube-search-api');
 
 /**
  * @module youtube
@@ -49,10 +47,9 @@ module.exports.getPlaylistId = (URL) => {
  */
 module.exports.getPlaylistItems = (playlistId) => {
 	return new Promise((resolve, reject) => {
-		axios.get(`https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${process.env.YT_API_KEY}`)
-			.then(async response => {
-				resolve(response.data.items ?? []);
-			}).catch(reject);
+		ytSearchAPI.GetPlaylistData(playlistId).then((result) => {
+			resolve(result.items ?? []);
+		}).catch(reject);
 	});
 };
 
@@ -64,22 +61,15 @@ module.exports.getPlaylistItems = (playlistId) => {
  */
 module.exports.searchByQuery = (query) => {
 	return new Promise((resolve) => {
-		search(
-			query,
-			{
-				maxResults: 1,
-				type: 'video',
-				key: process.env.YT_API_KEY,
-			},
-		).then(searchResults => {
-			if (searchResults.results[0]) {
-				resolve(searchResults.results[0].link);
+		ytSearchAPI.GetListByKeyword(query, false).then((res) => {
+			if (res.items && res.items.length > 0) {
+				resolve(`https://www.youtube.com/watch?v=${res.items[0].id}`);
 			}
 			else {
 				resolve(null);
 			}
-		}).catch(error => {
-			console.warn(error);
+		}).catch((err) => {
+			console.warn(err);
 			resolve(null);
 		});
 	});

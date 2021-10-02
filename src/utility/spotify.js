@@ -1,5 +1,5 @@
 const axios = require('axios');
-const search = require('youtube-search');
+const youtube = require('./youtube');
 
 const max_retries = 3;
 const spotifyURL = /https?:\/\/(?:embed\.|open\.)(?:spotify\.com\/)(?:track\/|\?uri=spotify:track:)((\w|-){22})/;
@@ -44,7 +44,7 @@ module.exports.getSpotifyAccessToken = async (client, nocache, retry) => {
 	const options = {
 		headers: {
 			'Content-Type': 'application/x-www-form-urlencoded',
-			'Authorization': process.env.SPOTIFY_AUTH,
+			'Authorization': `Basic ${Buffer.from(`${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`).toString('base64')}`,
 		},
 	};
 
@@ -102,17 +102,10 @@ module.exports.getYoutubeFromSpotify = (client, url) => {
 				}).then(async response => {
 					const name = response.data.name;
 					const artist = response.data.album.artists[0].name;
-					const searchResult = await search(
-						name + ' ' + artist,
-						{
-							maxResults: 1,
-							type: 'video',
-							key: process.env.YT_API_KEY,
-						},
-					);
+					const searchResult = await youtube.searchByQuery(name + ' ' + artist);
 
-					if (searchResult.results[0]) {
-						resolve(searchResult.results[0].link);
+					if (searchResult) {
+						resolve(searchResult);
 					}
 					else {
 						reject('No correlating YouTube video could be found');

@@ -128,7 +128,7 @@ module.exports = {
 			const fail = [];
 
 			for (const item of playlistItems) {
-				const url = 'https://www.youtube.com/watch?v=' + item.snippet.resourceId.videoId;
+				const url = 'https://www.youtube.com/watch?v=' + item.id;
 				try {
 					const track = await createTrack(url);
 

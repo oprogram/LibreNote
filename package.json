@@ -95,6 +95,7 @@
     "require-from-string": "^2.0.2",
     "resolve-from": "^4.0.0",
     "rimraf": "^3.0.2",
+    "search": "^1.0.0",
     "semver": "^7.3.5",
     "shebang-command": "^2.0.0",
     "shebang-regex": "^3.0.0",
@@ -116,7 +117,7 @@
     "wrappy": "^1.0.2",
     "yallist": "^4.0.0",
     "youtube-dl-exec": "^1.2.6",
-    "youtube-search": "^1.1.6",
+    "youtube-search-api": "^1.0.10",
     "ytdl-core": "^4.9.1"
   },
   "scripts": {
