@@ -33,4 +33,4 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev
+            ghcr.io/oprogram/librenote:dev

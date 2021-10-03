@@ -35,8 +35,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.RELEASE_VERSION }}
+            ghcr.io/oprogram/librenote:latest
+            ghcr.io/oprogram/librenote:${{ env.RELEASE_VERSION }}
 
       - name: Deploy on VPS
         uses: appleboy/ssh-action@master
