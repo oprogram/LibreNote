@@ -46,7 +46,7 @@ jobs:
           username: ${{ secrets.HOST_USERNAME }}
           password: ${{ secrets.HOST_PASSWORD }}
           script: |
-            docker pull ghcr.io/librenotebot/librenote:latest
+            docker pull ghcr.io/oprogram/librenote:latest
             docker stop librenotebot
             docker rm librenotebot
-            docker run --name librenotebot -d ${{ secrets.envs }} --network=host --restart=unless-stopped ghcr.io/librenotebot/librenote:latest
+            docker run --name librenotebot -d ${{ secrets.envs }} --network=host --restart=unless-stopped ghcr.io/oprogram/librenote:latest
