@@ -43,8 +43,8 @@ Ensure you have [Docker](https://www.docker.com/) and [Node.js (v16)](https://no
         * e.g. (windows) if you created your file in Documents, the path would be `C:\Users\YOURUSERNAME\Documents\librenote.env` for `--env-file=C:\Users\YOURUSERNAME\Documents\librenote.env`.
         * Replace `YOURUSERNAME` with your windows username.
         ```
-        docker pull ghcr.io/librenotebot/librenote:latest
-        docker run --name librenote --env-file=<PATH.TO.ENV.FILE> -d --network=host --restart=unless-stopped ghcr.io/librenotebot/librenote:latest
+        docker pull ghcr.io/oprogram/librenote:latest
+        docker run --name librenote --env-file=<PATH.TO.ENV.FILE> -d --network=host --restart=unless-stopped ghcr.io/oprogram/librenote:latest
         ```
 5. LibreNote should be online in the servers you've added it to.
 
@@ -55,7 +55,7 @@ Ensure you have [Node.js (v16)](https://nodejs.org/), [Git](https://git-scm.com/
 3. Open a command line and run the following.
     * Clone the LibreNote repository to your PC.
         ```
-        git clone https://github.com/LibreNoteBot/LibreNote.git
+        git clone https://github.com/oprogram/LibreNote.git
         ```
     * Change your directory to the one just created for the repository.
         ```
