@@ -1,6 +1,7 @@
 ---
 id: readme
 slug: /
+sidebar_position: 1
 ---
 
 # LibreNote

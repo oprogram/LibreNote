@@ -1,3 +1,7 @@
+---
+sidebar_position: 2
+---
+
 # Contributing
 Being an open source project, contributing to the development of LibreNote is strongly encouraged and welcomed. Contribution may be made, predominantly, by two means: submitting and participating in [issues on the LibreNote GitHub repository](https://github.com/oprogram/LibreNote/issues); or submitting code changes throguh pull requests.
 

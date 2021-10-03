@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 // With JSDoc @type annotations, IDEs can provide config autocompletion
@@ -41,6 +42,17 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
     				docId: 'readme',
     				position: 'left',
     				label: 'Documentation',
+    			},
+    			{
+    				href: 'https://discord.gg/ayZdwHhjHB',
+    				position: 'left',
+    				label: 'Discord',
+    			},
+    			{
+    				href: 'https://github.com/oprogram/LibreNote',
+    				position: 'left',
+    				className: 'header-github-link',
+    				label: 'GitHub',
     			},
     		],
     	},
