@@ -45,7 +45,8 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.HOST_USERNAME }}
-          password: ${{ secrets.HOST_PASSWORD }}
+          key: ${{ secrets.HOST_SSH_KEY }}
+          passphrase: ${{ secrets.HOST_SSH_PASSPHRASE }}
           script: |
             docker pull ghcr.io/oprogram/librenote:latest
             docker stop librenotebot
