@@ -35,7 +35,7 @@ function generateDocs() {
 
   // Pass README.md to docs directory
   const readme = fs.readFileSync(path.join(__dirname, '../README.md'));
-  fs.writeFileSync(path.join(__dirname, '../docs/docs/README.md'), `---\nid: readme\nslug: /\n---\n\n${readme}`);
+  fs.writeFileSync(path.join(__dirname, '../docs/docs/README.md'), `---\nid: readme\nslug: /\nsidebar_position: 1\n---\n\n${readme}`);
 
   // grab all js files
   filePaths.forEach((filePath) => {
