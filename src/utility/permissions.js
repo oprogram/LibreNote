@@ -8,7 +8,7 @@
  * @param {object} GuildMember GuildMember from discord.js
  */
 module.exports.isDJ = async (GuildMember) => {
-	if (GuildMember.permissions.has('MANAGE_CHANNELS')) return true;
+	if (GuildMember.permissions.has('MANAGE_GUILD')) return true;
 
 	const roles = GuildMember.roles.cache;
 

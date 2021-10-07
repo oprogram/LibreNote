@@ -33,7 +33,7 @@ module.exports = {
 	guilds: null,
 	// method to run the command
 	async run(interaction) {
-		if (!interaction.member.permissions.has('MANAGE_CHANNELS')) return interaction.reply('You must have the `MANAGE_CHANNELS` permission to edit the configuration.');
+		if (!interaction.member.permissions.has('MANAGE_GUILD')) return interaction.reply('You must have the `MANAGE_GUILD` permission to edit the configuration.');
 
 		await interaction.deferReply();
 
