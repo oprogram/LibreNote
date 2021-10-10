@@ -15,35 +15,30 @@ module.exports = {
 		await interaction.deferReply();
 
 		let commitCount;
-		await axios.get(ghAPI + '/repos/LibreNoteBot/librenote/compare/824419fa02abb81c9d52214e10dd6596ab50323e...main')
+		await axios.get('https://api.github.com/repos/oprogram/librenote/compare/824419fa02abb81c9d52214e10dd6596ab50323e...main')
 			.then(response => {
 				commitCount = response.data.total_commits;
-			}).catch(error => {
-				console.warn(error);
-			});
+			}).catch(console.warn);
 
 		let contribList;
-		await axios.get(ghAPI + '/repos/LibreNoteBot/librenote/contributors?q=contributions&order=desc')
+		await axios.get('https://api.github.com/repos/oprogram/librenote/contributors?q=contributions&order=desc')
 			.then(response => {
 				contribList = response.data;
-			}).catch(error => {
-				console.warn(error);
-			});
+			}).catch(console.warn);
 
 		const embed = new MessageEmbed().setAuthor('Meta');
-		const topContrib = ['`Top 5 Contributors`'];
-		for (let i = 0; i < contribList.length; ++i) {
-			if (i == 5) break;
+		const topContrib = ['Top 5 Contributors\n'];
+		for (let item of contribList) {
+			if (contribList.indexOf(item) == 5) break;
 
-			topContrib.push(`${contribList[i].login} (${contribList[i].contributions})`);
+			topContrib.push(`${item.login} (${item.contributions})`);
 		}
-		embed.setDescription(topContrib.join('\n'))
-			.addField('Total Commits', commitCount.toString(), true);
+		embed.setDescription(`\`\`\`${topContrib.join('\n')}\`\`\``)
+			.addField('Total Commits', commitCount.toString(), true)
+			.addField('Repository', '[oprogram/LibreNote](https://github.com/oprogram/LibreNote)', true);
 
 		interaction.editReply({
-			embeds: [
-				embed,
-			],
+			embeds: [ embed, ],
 		});
 	},
 };
