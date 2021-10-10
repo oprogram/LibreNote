@@ -62,6 +62,9 @@ module.exports = {
 		}
 		else if (subCommand === 'playlistmax') {
 			const limit = interaction.options.getInteger('limit');
+			if (limit < 1) {
+				return interaction.editReply('You cannot set a negative limit.');
+			}
 
 			await interaction.client.db.setAsync(`librenote:settings:${interaction.guild.id}:playlistmax`, limit);
 			return interaction.editReply(`Successsfully set the playlist item limit to **${limit} ${limit == 1 ? 'item' : 'items'}**`);
