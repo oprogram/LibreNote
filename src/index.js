@@ -4,6 +4,7 @@ const { Client, Collection, Intents } = require('discord.js');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES] });
 const Redis = require('./utility/redis');
+const { constructEmbed } = require('./utility/embedConstructor');
 
 client.commands = new Collection();
 const commandFiles = fs.readdirSync(path.join(__dirname, '/commands')).filter(file => file.endsWith('.js'));
@@ -34,7 +35,7 @@ client.on('interactionCreate', async interaction => {
 	catch (error) {
 		console.error(error);
 		if (interaction.replied || interaction.deferred) {
-			await interaction.editReply('There was an error while executing this command!');
+			await interaction.editReply(constructEmbed({ color: 'RED', description: 'There was an error while executing this command.' }));
 		}
 		else {
 			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
