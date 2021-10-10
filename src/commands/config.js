@@ -62,8 +62,8 @@ module.exports = {
 		}
 		else if (subCommand === 'playlistmax') {
 			const limit = interaction.options.getInteger('limit');
-			if (limit > 50) {
-				return interaction.editReply('The YouTube API does not support more than 50 items in a playlist');
+			if (limit < 1) {
+				return interaction.editReply('You cannot set a negative limit.');
 			}
 
 			await interaction.client.db.setAsync(`librenote:settings:${interaction.guild.id}:playlistmax`, limit);
