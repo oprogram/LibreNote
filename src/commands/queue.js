@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
+const { constructEmbed } = require('../utility/embedConstructor');
 
 module.exports = {
 	// data of the command
@@ -16,12 +17,12 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		if (!member.voice.channelId) return interaction.editReply('You must be in a voice channel to run this command.');
+		if (!member.voice.channelId) return interaction.editReply(constructEmbed({ color: 'RED', description: 'You must be in a voice channel to run this command.' }));
 
 		const connection = interaction.client.connections.get(interaction.guildId);
 
 		if (!connection) {
-			return interaction.editReply('No music is currently playing.');
+			return interaction.editReply(constructEmbed({ color: 'RED', description: 'No music is currently playing.' }));
 		}
 
 		const current = `Playing **[${connection.currentTrack.title}](${connection.currentTrack.url})**`;

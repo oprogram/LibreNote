@@ -25,11 +25,11 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		if (!member.voice.channelId) return interaction.editReply('You must be in a voice channel to run this command.');
-		if (!member.voice.channel.joinable) return interaction.editReply('I cannot join your voice channel.');
+		if (!member.voice.channelId) return interaction.editReply(constructEmbed({ color: 'RED', description: 'You must be in a voice channel to run this command.' }));
+		if (!member.voice.channel.joinable) return interaction.editReply(constructEmbed({ color: 'RED', description: 'I cannot join your voice channel.' }));
 
 		const canUseCommand = await canPerformAction(member);
-		if (!canUseCommand) return interaction.editReply('DJ only mode is enabled. You must be a DJ to run this command.');
+		if (!canUseCommand) return interaction.editReply(constructEmbed({ color: 'RED', description: 'DJ only mode is enabled. You must be a DJ to run this command.' }));
 
 		let connection = interaction.client.connections.get(interaction.guildId);
 
@@ -109,7 +109,7 @@ module.exports = {
 			});
 
 			if (playlistItems.length >= playlistmax) {
-				await interaction.followUp(constructEmbed({ color: 'RED', description: `This playlist (${playlistItems.length} tracks) will be cut to comply with the \`playlistmax\` configuration of ${playlistmax} tracks` }))
+				await interaction.followUp(constructEmbed({ color: 'RED', description: `This playlist (${playlistItems.length} tracks) will be cut to comply with the \`playlistmax\` configuration of ${playlistmax} tracks` }));
 				playlistItems.length = totalLength;
 			}
 
@@ -249,7 +249,7 @@ module.exports = {
 		}
 		catch (error) {
 			console.warn(error);
-			await interaction.followUp('Failed to join voice channel within 20 seconds, please try again later!');
+			await interaction.followUp(constructEmbed({ color: 'RED', description: 'Failed to join the voice channel. Please try again later.' }));
 			return;
 		}
 

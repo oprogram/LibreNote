@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { AudioPlayerStatus } = require('@discordjs/voice');
+const { constructEmbed } = require('../utility/embedConstructor');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,17 +16,17 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		if (!member.voice.channelId) return interaction.editReply('You must be in a voice channel to run this command.');
+		if (!member.voice.channelId) return interaction.editReply(constructEmbed({ color: 'RED', description: 'You must be in a voice channel to run this command.' }));
 
 		const connection = interaction.client.connections.get(interaction.guildId);
 
-		if (!connection) return interaction.editReply('No music is currently playing.');
+		if (!connection) return interaction.editReply(constructEmbed({ color: 'RED', description: 'No music is currently playing.' }));
 
 		if (member.voice.channel.members.size > 2) {
 			const skipReq = Math.ceil(member.voice.channel.members.size / 2);
 
 			if (connection.currentTrack.voteSkip.includes(member.id)) {
-				await interaction.editReply('You have already voted to skip!');
+				await interaction.editReply(constructEmbed({ color: 'RED', description: 'You have already voted to skip.' }));
 				return;
 			}
 
