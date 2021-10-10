@@ -56,6 +56,9 @@ module.exports = {
 			if (interaction.client.id === '88009136901889644') return interaction.editReply('Modifying the `maxlength` of the main LibreNote instance is not permitted.');
 
 			const length = interaction.options.getInteger('length');
+			if (length < 1) {
+				return interaction.editReply('You cannot set a negative limit');
+			}
 
 			await interaction.client.db.setAsync(`librenote:settings:${interaction.guild.id}:maxlength`, length);
 			return interaction.editReply(`Successfully set the song length limit to **${length} ${length == 1 ? 'minute' : 'minutes'}**`);
