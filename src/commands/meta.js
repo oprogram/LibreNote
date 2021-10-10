@@ -29,7 +29,7 @@ module.exports = {
 		const embed = new MessageEmbed().setAuthor('Meta');
 		const topContrib = ['Top 5 Contributors\n'];
 		for (let item of contribList) {
-			if (contribList.indexOf(item) == 5) break;
+			if (contribList.indexOf(item) + 1 == 5) break;
 
 			topContrib.push(`${item.login} (${item.contributions})`);
 		}
