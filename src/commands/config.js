@@ -53,7 +53,7 @@ module.exports = {
 			return interaction.editReply(`Successfully **${djModeEnabled ? 'disabled' : 'enabled'}** DJ only mode.`);
 		}
 		else if (subCommand === 'maxlength') {
-			if (interaction.client.id === 88009136901889644) return interaction.editReply('Modifying the `maxlength` of the main LibreNote instance is not permitted.');
+			if (interaction.client.id === '88009136901889644') return interaction.editReply('Modifying the `maxlength` of the main LibreNote instance is not permitted.');
 
 			const length = interaction.options.getInteger('length');
 

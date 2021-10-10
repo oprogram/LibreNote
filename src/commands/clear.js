@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { isDJ } = require('../utility/permissions');
+const { constructEmbed } = require('../utility/embedConstructor');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,18 +16,18 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		if (!member.voice.channelId) return interaction.editReply('You must be in a voice channel to run this command.');
+		if (!member.voice.channelId) return interaction.editReply(constructEmbed({ color: 'RED', description: 'You must be in a voice channel to run this command.' }));
 
 		const connection = interaction.client.connections.get(interaction.guildId);
 
 		if (!connection) {
-			return interaction.editReply('No music is currently playing.');
+			return interaction.editReply(constructEmbed({ color: 'RED', description: 'No music is currently playing.' }));
 		}
 
 		const isMemberDJ = await isDJ(member);
-		if (!isMemberDJ) return interaction.editReply('Only DJs can clear the queue.');
+		if (!isMemberDJ) return interaction.editReply(constructEmbed({ color: 'RED', description: 'Only DJs can clear the queue.' }));
 
-		if (connection.queue.length == 0) return interaction.editReply('The queue is already empty.');
+		if (connection.queue.length == 0) return interaction.editReply(constructEmbed({ color: 'RED', description: 'The queue is already empty.' }));
 
 		connection.queue = [];
 		await interaction.editReply(':put_litter_in_its_place: **Cleared!**');

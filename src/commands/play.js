@@ -7,6 +7,7 @@ const { canPerformAction } = require('../utility/permissions');
 
 const youtube = require('../utility/youtube');
 const spotify = require('../utility/spotify');
+const { constructEmbed } = require('../utility/embedConstructor');
 
 module.exports = {
 	// data of the command
@@ -24,11 +25,11 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		if (!member.voice.channelId) return interaction.editReply('You must be in a voice channel to run this command.');
-		if (!member.voice.channel.joinable) return interaction.editReply('I cannot join your voice channel.');
+		if (!member.voice.channelId) return interaction.editReply(constructEmbed({ color: 'RED', description: 'You must be in a voice channel to run this command.' }));
+		if (!member.voice.channel.joinable) return interaction.editReply(constructEmbed({ color: 'RED', description: 'I cannot join your voice channel.' }));
 
 		const canUseCommand = await canPerformAction(member);
-		if (!canUseCommand) return interaction.editReply('DJ only mode is enabled. You must be a DJ to run this command.');
+		if (!canUseCommand) return interaction.editReply(constructEmbed({ color: 'RED', description: 'DJ only mode is enabled. You must be a DJ to run this command.' }));
 
 		let connection = interaction.client.connections.get(interaction.guildId);
 
@@ -93,13 +94,7 @@ module.exports = {
 			const playlistId = youtube.getPlaylistId(songRaw);
 
 			if (!playlistId) {
-				return interaction.editReply({
-					embeds: [
-						new MessageEmbed()
-							.setColor('RED')
-							.setDescription('Could not obtain playlist id from URL.'),
-					],
-				});
+				return interaction.editReply(constructEmbed({ color: 'RED', description: 'Could not obtain playlist id from URL.' }));
 			}
 
 			const playlistItems = await youtube.getPlaylistItems(playlistId);
@@ -114,13 +109,7 @@ module.exports = {
 			});
 
 			if (playlistItems.length >= playlistmax) {
-				await interaction.followUp({
-					embeds: [
-						new MessageEmbed()
-							.setColor('RED')
-							.setDescription(`This playlist (${playlistItems.length} tracks) will be cut to comply with the \`playlistmax\` configuration of ${playlistmax} tracks`),
-					],
-				});
+				await interaction.followUp(constructEmbed({ color: 'RED', description: `This playlist (${playlistItems.length} tracks) will be cut to comply with the \`playlistmax\` configuration of ${playlistmax} tracks` }));
 				playlistItems.length = totalLength;
 			}
 
@@ -176,13 +165,7 @@ module.exports = {
 				}
 			}
 			catch (error) {
-				return interaction.editReply({
-					embeds: [
-						new MessageEmbed()
-							.setColor('RED')
-							.setDescription(error),
-					],
-				});
+				return interaction.editReply(constructEmbed({ color: 'RED', description: error }));
 			}
 		}
 		else if (spotify.isPlaylistURL(songRaw)) {
@@ -193,21 +176,10 @@ module.exports = {
 
 					const totalLength = (response.length >= playlistmax) ? playlistmax : response.length;
 
-					await interaction.editReply({
-						embeds: [
-							new MessageEmbed()
-								.setDescription(`:arrows_counterclockwise: Loading playlist items (0/${totalLength})...`),
-						],
-					});
+					await interaction.editReply(constructEmbed({ description: `:arrows_counterclockwise: Loading playlist items (0/${totalLength})...` }));
 
 					if (response.length >= playlistmax) {
-						await interaction.followUp({
-							embeds: [
-								new MessageEmbed()
-									.setColor('RED')
-									.setDescription(`This playlist (${response.length} tracks) will be cut to comply with the \`playlistmax\` configuration of ${playlistmax} tracks`),
-							],
-						});
+						await interaction.followUp(constructEmbed({ color: 'RED', description: `This playlist (${response.length} tracks) will be cut to comply with the \`playlistmax\` configuration of ${playlistmax} tracks` }));
 						response.length = totalLength;
 					}
 
@@ -263,24 +235,12 @@ module.exports = {
 				YouTubeVideoURL = songURL;
 			}
 			else {
-				return interaction.editReply({
-					embeds: [
-						new MessageEmbed()
-							.setColor('RED')
-							.setDescription('No track found with that query.'),
-					],
-				});
+				return interaction.editReply(constructEmbed({ color: 'RED', description: 'No track found with that query' }));
 			}
 		}
 
 		if (!YouTubeVideoURL) {
-			return interaction.editReply({
-				embeds: [
-					new MessageEmbed()
-						.setColor('RED')
-						.setDescription('A logical error occured while attempting to resolve that track.'),
-				],
-			});
+			return interaction.editReply(constructEmbed({ color: 'RED', description: 'A logical error occured while attempting to resolve that track.' }));
 		}
 
 		/* Join voice channel */
@@ -289,7 +249,7 @@ module.exports = {
 		}
 		catch (error) {
 			console.warn(error);
-			await interaction.followUp('Failed to join voice channel within 20 seconds, please try again later!');
+			await interaction.followUp(constructEmbed({ color: 'RED', description: 'Failed to join the voice channel. Please try again later.' }));
 			return;
 		}
 
