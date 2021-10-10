@@ -259,7 +259,7 @@ module.exports = {
 			const track = await createTrack(YouTubeVideoURL);
 
 			if (Number(track.details.lengthSeconds) > 60 * maxlength) {
-				return interaction.editReply(`I cannot play songs longer than ${maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}`);
+				return interaction.editReply(constructEmbed({ color: 'RED', description: `I cannot play songs longer than ${maxlength} ${maxlength == 1 ? 'minute' : 'minutes'}` }));
 			}
 			else {
 				await connection.addToQueue(track);
@@ -277,7 +277,7 @@ module.exports = {
 		}
 		catch (error) {
 			console.warn(error);
-			await interaction.editReply('Failed to play track.');
+			await interaction.editReply(constructEmbed({ color: 'RED', description: 'Failed to play track' }));
 		}
 	},
 };
