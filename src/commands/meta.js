@@ -2,8 +2,6 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const axios = require('axios').default;
 
-const ghAPI = 'https://api.github.com';
-
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('meta')
@@ -28,7 +26,7 @@ module.exports = {
 
 		const embed = new MessageEmbed().setAuthor('Meta');
 		const topContrib = ['Top 5 Contributors\n'];
-		for (let item of contribList) {
+		for (const item of contribList) {
 			if (contribList.indexOf(item) + 1 == 5) break;
 
 			topContrib.push(`${item.login} (${item.contributions})`);
