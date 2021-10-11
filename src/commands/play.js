@@ -207,21 +207,11 @@ module.exports = {
 							fail.push(url);
 						}
 
-						await interaction.editReply({
-							embeds: [
-								new MessageEmbed()
-									.setDescription(`:arrows_counterclockwise: Fetching playlist items (${success.length + fail.length}/${totalLength})...`),
-							],
-						});
+						await interaction.editReply(constructEmbed({ description: `:arrows_counterclockwise: Fetching playlist items (${success.length + fail.length}/${totalLength})...` }));
 					}
 
 					await connection.processQueue();
-					return await interaction.editReply({
-						embeds: [
-							new MessageEmbed()
-								.setDescription(`:white_check_mark: Successfully added ${success.length} tracks to the queue, could not add ${fail.length} tracks.`),
-						],
-					});
+					return await interaction.editReply(constructEmbed({ description: `:white_check_mark: Successfully added ${success.length} tracks to the queue, could not add ${fail.length} tracks.` }));
 				})
 				.catch(console.warn);
 
