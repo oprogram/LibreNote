@@ -36,7 +36,9 @@ module.exports = {
 			.addField('Repository', '[oprogram/LibreNote](https://github.com/oprogram/LibreNote)', true);
 
 		interaction.editReply({
-			embeds: [ embed, ],
+			embeds: [
+				embed,
+			],
 		});
 	},
 };
