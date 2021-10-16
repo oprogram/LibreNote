@@ -2,7 +2,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 # Installation & Hosting Guide
-LibreNote is a bot intended for self-hosting. This guide proves instructions for a rudimentary installation of LibreNote through either Docker (recommended) or Node.js.
+LibreNote is a bot intended for self-hosting. This guide provides instructions for a rudimentary installation of LibreNote via either Docker (recommended) or Node.js.
 
 ### Preliminary Steps
 #### Prerequisites
@@ -12,13 +12,13 @@ LibreNote is a bot intended for self-hosting. This guide proves instructions for
         <ol>
             <li>Select <i>New Application</i></li>
             <li>Enter a name for your application, then select <i>Create</i></li>
-            <li>Select <i>Bot</i> on the left panel and select <i>Add Bot</i>, confirm the action</li>
-            <li>Add the bot to your servers.</li>
+            <li>Select <i>Bot</i> on the left panel and then choose <i>Add Bot</i>, confirm the action</li>
+            <li>Add the bot to your servers</li>
             <ul>
                 <li>https://discord.com/api/oauth2/authorize?client_id=CLIENTID&permissions=8&scope=bot%20applications.commands</li>
-                <li>Replace <samp>Client ID</samp> in the URL with the <i>Application ID</i> from the Application <i>General Information</i></li>
+                <li>Replace <samp>CLIENTID</samp> in the URL with the <i>Application ID</i> from the application's <i>General Information</i></li>
             </ul>
-            <li>Take note of your <i>Client ID</i> from the <i>General Information</i> tab and <i>Bot Token</i> from the <i>Bot</i> tab</li>
+            <li>Take note of your <i>Application ID</i> from the <i>General Information</i> tab, and your <i>Bot Token</i> from the <i>Bot</i> tab</li>
         </ol>
     </div>
 </details>
@@ -71,9 +71,9 @@ docker run --name librenote --env-file=ENV_PATH -d --network=host --restart=unle
 ```
 
 #### Node.js
-Those who elect to use avoid Docker, may also run LibreNote with Node.js (with or without a process manager). Hosts should be weary of this method, while it is much more easier to set up, there have been historical issues relating to the functioning of ytdl, a necessary LibreNote component. As such, it is recommended that most users stick to Docker hosting. For those who wish to use Node, ensure that you have installed [Node.js (v16)](https://nodejs.org/), [Git](https://git-scm.com/downloads) and [Redis (Windows Subsystem for Linux)](https://medium.com/@RedisLabs/windows-subsystem-for-linux-wsl-10e3ca4d434e) or [Redis (Legacy, unmaintained windows port)](https://github.com/microsoftarchive/redis/releases/tag/win-3.0.504).
+Those who elect to avoid Docker, may run LibreNote with Node.js (with or without a process manager). Hosts should be weary of this method, while it is much more easier to set up, there have historically been issues related to the functioning of ytdl, a necessary LibreNote component. As such, it is recommended that most users stick to Docker hosting. For those who wish to use Node, ensure that you have installed [Node.js (v16)](https://nodejs.org/), [Git](https://git-scm.com/downloads) and [Redis (Windows Subsystem for Linux)](https://medium.com/@RedisLabs/windows-subsystem-for-linux-wsl-10e3ca4d434e) or [Redis (Legacy, unmaintained Windows port)](https://github.com/microsoftarchive/redis/releases/tag/win-3.0.504).
 
-Begin by cloning the LibreNote Git repository to a location where you may ensure that it stays.
+Begin by cloning the LibreNote Git repository.
 ```
 git clone https://github.com/oprogram/LibreNote.git
 cd librenote
@@ -85,7 +85,7 @@ npm install
 node dev/commands.js
 node dev/run.js
 ```
-At this point, if no errors are displayed, you may stop the bot via <kbd>Ctrl + C</kbd>. You may also set up your desired process manager now.
+If no errors are displayed, you may stop the bot via <kbd>Ctrl + C</kbd>. You may also set up your desired process manager now.
 
 To start the bot again, simply execute:
 ```
