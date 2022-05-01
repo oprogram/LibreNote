@@ -25,6 +25,10 @@ module.exports = {
 
 		const connection = interaction.client.connections.get(interaction.guildId);
 
+		if (connection.mode == 'radio') {
+			return interaction.editReply(constructEmbed({ color: 'RED', description: 'You cannot resume while the player is in radio mode.' }));
+		}
+
 		if (!connection || connection.audioPlayer.state.status === AudioPlayerStatus.Idle) {
 			return interaction.editReply(constructEmbed({ color: 'RED', description: 'No music is currently playing.' }));
 		}

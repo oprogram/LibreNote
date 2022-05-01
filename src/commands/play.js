@@ -49,6 +49,10 @@ module.exports = {
 			return interaction.editReply('An error occured while attempting to play music.');
 		}
 
+		if (connection.mode == 'radio') {
+			return interaction.editReply(constructEmbed({ color: 'RED', description: 'You cannot add music to the queue while the player is in radio mode.' }));
+		}
+
 		const maxlength = (await interaction.client.db.getNumberAsync(`librenote:settings:${interaction.guild.id}:maxlength`) ?? 15);
 		const playlistmax = (await interaction.client.db.getNumberAsync(`librenote:settings:${interaction.guild.id}:playlistmax`) ?? 50);
 

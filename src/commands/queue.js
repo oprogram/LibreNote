@@ -26,7 +26,7 @@ module.exports = {
 		}
 
 		let totalLength = 0;
-		const current = `Playing **[${connection.currentTrack.title}](${connection.currentTrack.url})**`;
+		const current = `Playing **[${connection.currentTrack ? connection.currentTrack.title : 'Unknown'}](${connection.currentTrack ? connection.currentTrack.url : 'Unknown'})**`;
 		const queue = connection.queue
 			.slice(0, 10)
 			.map((track, index) => {

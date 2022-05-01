@@ -39,6 +39,8 @@ module.exports = class MusicConnection {
 		this.queue = [];
 		this.loop = 'off';
 		this.shuffle = false;
+		this.mode = 'queue';
+		// mode is queue or radio
 
 		this.voiceConnection.on('stateChange', async (_, newState) => {
 			if (newState.status === VoiceConnectionStatus.Disconnected) {
@@ -79,7 +81,7 @@ module.exports = class MusicConnection {
 		});
 
 		this.audioPlayer.on('stateChange', async (oldState, newState) => {
-			if (newState.status === AudioPlayerStatus.Idle && oldState.status !== AudioPlayerStatus.Idle) {
+			if (newState.status === AudioPlayerStatus.Idle && oldState.status !== AudioPlayerStatus.Idle && oldState.resource && oldState.resource.metadata) {
 				if ((this.loop === 'track') && this.currentTrack) {
 					const resource = await this.currentTrack.createAudioResource();
 					this.audioPlayer.play(resource);
@@ -93,7 +95,7 @@ module.exports = class MusicConnection {
 					void this.processQueue();
 				}
 			}
-			else if (newState.status === AudioPlayerStatus.Playing && oldState.status !== AudioPlayerStatus.Paused) {
+			else if (newState.status === AudioPlayerStatus.Playing && oldState.status !== AudioPlayerStatus.Paused && this.mode != 'radio') {
 				newState.resource.metadata.onStart();
 			}
 		});
@@ -128,7 +130,7 @@ module.exports = class MusicConnection {
 	 * @description Processes the queue, plays the next track if there is one.
 	 */
 	async processQueue() {
-		if (this.queueLock || this.audioPlayer.state.status !== AudioPlayerStatus.Idle || (this.queue.length === 0 && !(this.loop === 'track' && this.currentTrack))) {
+		if (this.mode == 'radio' || (this.queueLock || this.audioPlayer.state.status !== AudioPlayerStatus.Idle || (this.queue.length === 0 && !(this.loop === 'track' && this.currentTrack)))) {
 			return;
 		}
 
@@ -161,6 +163,32 @@ module.exports = class MusicConnection {
 				this.currentTrack = undefined;
 				return this.processQueue();
 			}
+		}
+	}
+
+	/**
+	 * @method changeMode
+	 * @description Change queue mode to radio or queue (in the future playlists?)
+	 */
+	async changeMode(mode) {
+		const modes = ['queue', 'radio'];
+		if (!mode || !modes.includes(mode)) {
+			mode = 'queue';
+		}
+
+		if (mode == 'radio') {
+			this.mode = 'radio';
+			this.loop = 'off';
+			this.audioPlayer.stop(true);
+			this.queueLock = false;
+			this.currentTrack = undefined;
+		}
+		else if (mode == 'queue' && this.mode != 'queue') {
+			this.mode = 'queue';
+			this.audioPlayer.stop(true);
+			this.queueLock = false;
+			this.currentTrack = undefined;
+			this.processQueue();
 		}
 	}
 };

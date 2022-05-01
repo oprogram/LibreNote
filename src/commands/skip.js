@@ -20,6 +20,10 @@ module.exports = {
 
 		const connection = interaction.client.connections.get(interaction.guildId);
 
+		if (connection.mode == 'radio') {
+			return interaction.editReply(constructEmbed({ color: 'RED', description: 'You cannot skip while the player is in radio mode.' }));
+		}
+
 		if (!connection) return interaction.editReply(constructEmbed({ color: 'RED', description: 'No music is currently playing.' }));
 
 		if (member.voice.channel.members.size > 2) {
