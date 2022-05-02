@@ -3,7 +3,7 @@ const { promisify } = require('util');
 
 const client = redis.createClient({
 	host: '127.0.0.1',
-	port: 6379,
+	port: 8081, // do not push this to production
 	password: process.env.REDIS_PASSWORD,
 	tls: null,
 });

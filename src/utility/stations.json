@@ -1,11 +1,9 @@
 [
-	[
-		[":one:", "Virgin Radio", "http://radio.virginradio.co.uk/stream"],
-		[":two:", "TalkRADIO", "http://radio.talkradio.co.uk/stream"],
-		[":three:", "GB News", "http://listen-gbnews.sharp-stream.com/gbnews.mp3"],
-		[":four:", "Greatest Hits Radio (Surrey & East Hampshire)", "http://edge-bauerall-01-gos2.sharp-stream.com/net2surrey.mp3"],
-		[":five:", "Heart (Crawley & Surrey)", "http://icecast.thisisdax.com/HeartCrawleyMP3"],
-		[":six:", "Leading Britain's Conversation (London)", "https://media-ssl.musicradio.com/LBCLondon"],
-		[":seven:", "Capital (London)", "http://icecast.thisisdax.com/CapitalMP3"]
-	]
+	["Virgin Radio", "http://radio.virginradio.co.uk/stream"],
+	["TalkRADIO", "http://radio.talkradio.co.uk/stream"],
+	["GB News", "http://listen-gbnews.sharp-stream.com/gbnews.mp3"],
+	["Greatest Hits Radio (Surrey & East Hampshire)", "http://edge-bauerall-01-gos2.sharp-stream.com/net2surrey.mp3"],
+	["Heart (Crawley & Surrey)", "http://icecast.thisisdax.com/HeartCrawleyMP3"],
+	["Leading Britain's Conversation (London)", "https://media-ssl.musicradio.com/LBCLondon"],
+	["Capital (London)", "http://icecast.thisisdax.com/CapitalMP3"]
 ]

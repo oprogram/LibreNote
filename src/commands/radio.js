@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { constructEmbed } = require('../utility/embedConstructor');
-const { joinVoiceChannel, createAudioResource } = require('@discordjs/voice');
+const { joinVoiceChannel } = require('@discordjs/voice');
 const { canPerformAction } = require('../utility/permissions');
 const MusicConnection = require('../utility/musicConnection');
 const Discord = require('discord.js');
@@ -12,7 +12,7 @@ module.exports = {
 		.setName('radio')
 		.setDescription('radio test thing'),
 	// array of guild ids, null for global command
-	guilds: ['953064066576949348'],
+	guilds: null,
 	// method to run the command
 	async run(interaction) {
 		const member = interaction.member;
@@ -46,19 +46,60 @@ module.exports = {
 		}
 
 		if (connection.mode == 'radio') {
-			// ask if they want to change radio station OR switch to queue mode via buttons
-
-			connection.changeMode('queue');
-			return interaction.editReply(':asterisk: **Switched to queue mode.**');
+			return await interaction.editReply({
+				content: '**Would you like to change the radio station or exit radio mode?**',
+				components: [
+					new Discord.MessageActionRow()
+						.addComponents(
+							new Discord.MessageButton()
+								.setCustomId('changeradiostation')
+								.setStyle('PRIMARY')
+								.setLabel('Change Station')
+								.setDisabled(false),
+							new Discord.MessageButton()
+								.setCustomId('exitradiomode')
+								.setStyle('DANGER')
+								.setLabel('Exit Radio Mode')
+								.setDisabled(false),
+							new Discord.MessageButton()
+								.setCustomId('cancel')
+								.setStyle('DANGER')
+								.setLabel('Cancel')
+								.setDisabled(false),
+						),
+				],
+			});
 		}
 		else {
 			connection.changeMode('radio');
-			await interaction.editReply('Please wait...');
+			await interaction.editReply('**Please wait...**');
 
-			const message = await interaction.editReply({
-				content: '-',
-				embeds: constructEmbed({ color: 'BLUE', title: 'Select radio station', description: stations[0].map(x => x[0] + ' ' + x[1]).join('\n'), footer: `Viewing page 1 of ${stations.length}` }).embeds,
+			const items = stations.length;
+			const divided = (items / 15);
+			const pageNumber = ((divided % 1 == 0) ? divided : Math.ceil(divided));
+
+			await interaction.editReply({
+				content: '⬇️ **Select a radio station:**',
 				components: [
+					new Discord.MessageActionRow()
+						.addComponents(
+							new Discord.MessageSelectMenu({
+								customId: 'station_1',
+								// station_pagenumber
+								options: stations.map(x => x[0]).sort().map(x => {
+									return {
+										label: x,
+										value: (x.toLowerCase().split(' ').join('_')),
+										emoji: '📻',
+									};
+								}),
+								// max of 25 options
+								minValues: 1,
+								maxValues: 1,
+								disabled: false,
+								placeholder: `Select a radio station (page 1 of ${pageNumber})`,
+							}),
+						),
 					new Discord.MessageActionRow()
 						.addComponents(
 							new Discord.MessageButton()
@@ -70,66 +111,15 @@ module.exports = {
 								.setCustomId('forward')
 								.setStyle('PRIMARY')
 								.setEmoji('▶️')
-								.setDisabled(stations.length <= 1),
+								.setDisabled(pageNumber <= 1),
+							new Discord.MessageButton()
+								.setCustomId('cancel')
+								.setStyle('DANGER')
+								.setLabel('Cancel')
+								.setDisabled(false),
 						),
 				],
 			});
-
-			const reactions = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣'];
-
-			const getPage = (reaction) => {
-				return 1;
-			};
-
-			const filter = (reaction, user) => {
-				if (user.id != member.id) return false;
-
-				const index = reactions.indexOf(reaction.emoji.name);
-
-				if (index < 0) return false;
-
-				const page = getPage(reaction);
-
-				if ((index + 1) > stations[page - 1].length) return false;
-
-				return true;
-			};
-
-			const collector = message.createReactionCollector({ filter, time: 60000, max: 1 });
-
-			collector.on('end', collected => {
-				if (collected.size == 0) {
-					interaction.followUp(':x: **Timed out.**');
-				}
-				else {
-					const reaction = collected.first();
-					const page = getPage(reaction);
-					const index = reactions.indexOf(reaction.emoji.name);
-
-					const data = stations[page - 1][index];
-
-					if (data) {
-						const resource = createAudioResource(data[2]);
-						connection.audioPlayer.play(resource);
-
-						message.reactions.removeAll();
-						return interaction.editReply({
-							content: `📻 **Now playing: ${data[1]}**`,
-							embeds: [],
-							components: [],
-						});
-					}
-					else {
-						return interaction.editReply(constructEmbed({ color: 'RED', description: 'Failed to getch resource.' }));
-					}
-				}
-			});
-
-			for (let i = 0; ((i < reactions.length) && (i < stations[0].length)); i++) {
-				if (reactions[i]) {
-					await message.react(reactions[i]);
-				}
-			}
 		}
 	},
 };
