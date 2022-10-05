@@ -23,7 +23,7 @@ module.exports = {
 		const connection = interaction.client.connections.get(interaction.guildId);
 
 		if (connection.mode == 'radio') {
-			return interaction.editReply(constructEmbed({ color: 'RED', description: 'You cannot force skip while the player is in radio mode.' }));
+			return interaction.editReply(constructEmbed({ color: 'RED', description: 'The player is currently in radio mode. You cannot force skip.' }));
 		}
 
 		if (!connection) {
