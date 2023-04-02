@@ -118,7 +118,7 @@
     "yallist": "^4.0.0",
     "youtube-dl-exec": "^1.2.6",
     "youtube-search-api": "^1.0.10",
-    "ytdl-core": "^4.9.1"
+    "ytdl-core": "^4.11.3"
   },
   "scripts": {
     "docs": "node dev/generate-docs.js && cd docs && npm run build && npm run serve"
