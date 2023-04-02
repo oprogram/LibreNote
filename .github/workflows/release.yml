@@ -48,7 +48,7 @@ jobs:
           key: ${{ secrets.HOST_SSH_KEY }}
           passphrase: ${{ secrets.HOST_SSH_PASSPHRASE }}
           script: |
-            docker pull ghcr.io/oprogram/librenote:latest
-            docker stop librenotebot
-            docker rm librenotebot
-            docker run --name librenotebot -d ${{ secrets.envs }} --network=host --restart=unless-stopped ghcr.io/oprogram/librenote:latest
+            echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u Ulferno --password-stdin
+            cd /projects/librenote
+            docker compose pull
+            docker compose up -d
